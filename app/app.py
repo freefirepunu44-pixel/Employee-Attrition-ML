@@ -393,6 +393,50 @@ div[role="radiogroup"] p, div[role="radiogroup"] [data-testid="stMarkdownContain
   font-weight: 600 !important; font-size: 13.5px !important; color: #E2E8F0 !important;
 }
 
+/* ---------- Form Inputs & Labels (Guaranteed High Contrast) ---------- */
+label,
+[data-testid="stWidgetLabel"],
+[data-testid="stWidgetLabel"] p,
+[data-testid="stWidgetLabel"] span,
+[data-testid="stWidgetLabel"] label,
+div[data-testid="stWidgetLabel"] * {
+  color: #0F172A !important;
+  font-weight: 700 !important;
+  font-size: 13.5px !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  display: block !important;
+  margin-bottom: 5px !important;
+}
+
+[data-testid="stNumberInput"] input,
+[data-testid="stTextInput"] input,
+div[data-baseweb="select"] > div,
+div[data-baseweb="input"] input,
+div[data-baseweb="base-input"] input {
+  background-color: #FFFFFF !important;
+  color: #0F172A !important;
+  border: 1.5px solid #CBD5E1 !important;
+  border-radius: 8px !important;
+  font-weight: 600 !important;
+  font-size: 14px !important;
+}
+
+[data-testid="stNumberInput"] button {
+  background-color: #F1F5F9 !important;
+  color: #0F172A !important;
+  border: 1px solid #CBD5E1 !important;
+}
+
+[data-testid="stSlider"] div,
+[data-testid="stSlider"] span,
+[data-testid="stSlider"] p,
+[data-testid="stSlider"] [data-testid="stTickBarMin"],
+[data-testid="stSlider"] [data-testid="stTickBarMax"] {
+  color: #0F172A !important;
+  font-weight: 600 !important;
+}
+
 /* ---------- Buttons ---------- */
 .stButton > button, [data-testid="stFormSubmitButton"] > button {
   border-radius: 10px; font-weight: 700; border: none;
