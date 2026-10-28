@@ -740,109 +740,168 @@ def render_predict_page():
     with st.form("employee_assessment_form"):
         # Section A: Personal & Commute
         st.markdown(
-            '<div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;">'
-            '<span class="tag">1. Demographics</span><span style="font-weight:800;font-size:14.5px;color:#0F172A;">Personal Demographics & Commute</span></div>',
+            '<div style="display:flex;align-items:center;gap:8px;margin-bottom:14px;">'
+            '<span class="tag">1. Demographics</span><span style="font-weight:800;font-size:15px;color:#0F172A;">Personal Demographics & Commute</span></div>',
             unsafe_allow_html=True,
         )
-        c1, c2, c3 = st.columns(3)
-        age = c1.number_input("Employee Age (Years)", 18, 65, int(val("Age", 35)))
-        gender_opts = ["Male", "Female"]
-        gender = c1.selectbox("Gender", gender_opts, index=gender_opts.index(val("Gender", "Male")))
 
-        mar_opts = ["Single", "Married", "Divorced"]
-        marital = c2.selectbox("Marital Status", mar_opts, index=mar_opts.index(val("MaritalStatus", "Single")))
-        distance = c2.number_input("Commute Distance From Home (Miles)", 1, 35, int(val("DistanceFromHome", 8)))
+        d_r1_1, d_r1_2, d_r1_3 = st.columns(3)
+        with d_r1_1:
+            st.markdown('<div style="font-size:13.5px;font-weight:800;color:#0F172A;margin-bottom:4px;">👤 Employee Age <span style="font-size:11.5px;color:#64748B;font-weight:500;">(Years)</span></div>', unsafe_allow_html=True)
+            age = st.number_input("Employee Age", 18, 65, int(val("Age", 35)), label_visibility="collapsed")
+        with d_r1_2:
+            st.markdown('<div style="font-size:13.5px;font-weight:800;color:#0F172A;margin-bottom:4px;">⚧️ Gender</div>', unsafe_allow_html=True)
+            gender_opts = ["Male", "Female"]
+            gender = st.selectbox("Gender", gender_opts, index=gender_opts.index(val("Gender", "Male")), label_visibility="collapsed")
+        with d_r1_3:
+            st.markdown('<div style="font-size:13.5px;font-weight:800;color:#0F172A;margin-bottom:4px;">💍 Marital Status</div>', unsafe_allow_html=True)
+            mar_opts = ["Single", "Married", "Divorced"]
+            marital = st.selectbox("Marital Status", mar_opts, index=mar_opts.index(val("MaritalStatus", "Single")), label_visibility="collapsed")
 
-        edu_field_opts = ["Life Sciences", "Medical", "Marketing", "Technical Degree", "Human Resources", "Other"]
-        edu_field = c3.selectbox("Field of Education", edu_field_opts, index=edu_field_opts.index(val("EducationField", "Life Sciences")))
-        edu_opts = [
-            "1 - Below College / High School",
-            "2 - Associate Degree / College",
-            "3 - Bachelor Degree",
-            "4 - Master Degree",
-            "5 - Doctorate / PhD",
-        ]
-        edu_idx = min(max(int(val("Education", 3)) - 1, 0), 4)
-        edu_sel = c3.selectbox("Education Level", edu_opts, index=edu_idx)
-        education = int(edu_sel.split(" - ")[0])
+        d_r2_1, d_r2_2, d_r2_3 = st.columns(3)
+        with d_r2_1:
+            st.markdown('<div style="font-size:13.5px;font-weight:800;color:#0F172A;margin-bottom:4px;">🚗 Commute Distance <span style="font-size:11.5px;color:#64748B;font-weight:500;">(Miles from home)</span></div>', unsafe_allow_html=True)
+            distance = st.number_input("Commute Distance", 1, 35, int(val("DistanceFromHome", 8)), label_visibility="collapsed")
+        with d_r2_2:
+            st.markdown('<div style="font-size:13.5px;font-weight:800;color:#0F172A;margin-bottom:4px;">🎓 Highest Education Level</div>', unsafe_allow_html=True)
+            edu_opts = [
+                "1 - Below College / High School",
+                "2 - Associate Degree / College",
+                "3 - Bachelor Degree",
+                "4 - Master Degree",
+                "5 - Doctorate / PhD",
+            ]
+            edu_idx = min(max(int(val("Education", 3)) - 1, 0), 4)
+            edu_sel = st.selectbox("Education Level", edu_opts, index=edu_idx, label_visibility="collapsed")
+            education = int(edu_sel.split(" - ")[0])
+        with d_r2_3:
+            st.markdown('<div style="font-size:13.5px;font-weight:800;color:#0F172A;margin-bottom:4px;">📚 Field of Education <span style="font-size:11.5px;color:#64748B;font-weight:500;">(Degree Major)</span></div>', unsafe_allow_html=True)
+            edu_field_opts = ["Life Sciences", "Medical", "Marketing", "Technical Degree", "Human Resources", "Other"]
+            edu_field = st.selectbox("Field of Education", edu_field_opts, index=edu_field_opts.index(val("EducationField", "Life Sciences")), label_visibility="collapsed")
 
         # Section B: Role & Compensation
         st.markdown(
-            '<div style="display:flex;align-items:center;gap:8px;margin:22px 0 12px;">'
-            '<span class="tag">2. Role & Pay</span><span style="font-weight:800;font-size:14.5px;color:#0F172A;">Job Position, Department & Compensation</span></div>',
+            '<div style="display:flex;align-items:center;gap:8px;margin:24px 0 14px;">'
+            '<span class="tag">2. Role & Pay</span><span style="font-weight:800;font-size:15px;color:#0F172A;">Job Position, Department & Compensation</span></div>',
             unsafe_allow_html=True,
         )
-        c4, c5, c6 = st.columns(3)
-        role_opts = [
-            "Sales Executive", "Research Scientist", "Laboratory Technician",
-            "Manufacturing Director", "Healthcare Representative", "Manager",
-            "Sales Representative", "Research Director", "Human Resources",
-        ]
-        role = c4.selectbox("Job Role / Title", role_opts, index=role_opts.index(val("JobRole", "Sales Executive")))
-        dept_opts = ["Sales", "Research & Development", "Human Resources"]
-        dept = c4.selectbox("Department", dept_opts, index=dept_opts.index(val("Department", "Sales")))
-        job_level = c4.slider("Job Seniority Band (1=Junior to 5=Executive)", 1, 5, int(val("JobLevel", 2)))
 
-        income = c5.number_input("Monthly Salary (USD $)", 1000, 25000, int(val("MonthlyIncome", 4800)), step=100)
-        hike = c5.number_input("Annual Salary Hike (%)", 10, 30, int(val("PercentSalaryHike", 11)))
-        stock = c5.slider("Stock Option Equity Level (0=None to 3=Max)", 0, 3, int(val("StockOptionLevel", 0)))
+        r_r1_1, r_r1_2, r_r1_3 = st.columns(3)
+        with r_r1_1:
+            st.markdown('<div style="font-size:13.5px;font-weight:800;color:#0F172A;margin-bottom:4px;">👔 Job Role / Title</div>', unsafe_allow_html=True)
+            role_opts = [
+                "Sales Executive", "Research Scientist", "Laboratory Technician",
+                "Manufacturing Director", "Healthcare Representative", "Manager",
+                "Sales Representative", "Research Director", "Human Resources",
+            ]
+            role = st.selectbox("Job Role", role_opts, index=role_opts.index(val("JobRole", "Sales Executive")), label_visibility="collapsed")
+        with r_r1_2:
+            st.markdown('<div style="font-size:13.5px;font-weight:800;color:#0F172A;margin-bottom:4px;">🏷️ Department</div>', unsafe_allow_html=True)
+            dept_opts = ["Sales", "Research & Development", "Human Resources"]
+            dept = st.selectbox("Department", dept_opts, index=dept_opts.index(val("Department", "Sales")), label_visibility="collapsed")
+        with r_r1_3:
+            st.markdown('<div style="font-size:13.5px;font-weight:800;color:#0F172A;margin-bottom:4px;">⏰ Works Overtime? <span style="font-size:11.5px;color:#DC2626;font-weight:700;">(Major Churn Driver)</span></div>', unsafe_allow_html=True)
+            ot_opts = ["Yes", "No"]
+            overtime = st.selectbox("Works Overtime", ot_opts, index=ot_opts.index(val("OverTime", "Yes")), label_visibility="collapsed")
 
-        ot_opts = ["Yes", "No"]
-        overtime = c6.selectbox("Works Overtime?", ot_opts, index=ot_opts.index(val("OverTime", "Yes")))
-        travel_opts = ["Travel_Rarely", "Travel_Frequently", "Non-Travel"]
-        travel_display = {"Travel_Rarely": "Travels Rarely", "Travel_Frequently": "Travels Frequently", "Non-Travel": "No Travel"}
-        travel = c6.selectbox("Business Travel Frequency", travel_opts, index=travel_opts.index(val("BusinessTravel", "Travel_Rarely")), format_func=lambda x: travel_display[x])
-        perf_opts = ["3 - Excellent Performance", "4 - Outstanding Performance"]
-        perf_idx = 0 if int(val("PerformanceRating", 3)) == 3 else 1
-        perf_sel = c6.selectbox("Performance Review Rating", perf_opts, index=perf_idx)
-        perf = int(perf_sel.split(" - ")[0])
+        r_r2_1, r_r2_2, r_r2_3 = st.columns(3)
+        with r_r2_1:
+            st.markdown('<div style="font-size:13.5px;font-weight:800;color:#0F172A;margin-bottom:4px;">💵 Monthly Salary <span style="font-size:11.5px;color:#64748B;font-weight:500;">(USD $ / month)</span></div>', unsafe_allow_html=True)
+            income = st.number_input("Monthly Salary", 1000, 25000, int(val("MonthlyIncome", 4800)), step=100, label_visibility="collapsed")
+        with r_r2_2:
+            st.markdown('<div style="font-size:13.5px;font-weight:800;color:#0F172A;margin-bottom:4px;">📊 Annual Salary Hike <span style="font-size:11.5px;color:#64748B;font-weight:500;">(%)</span></div>', unsafe_allow_html=True)
+            hike = st.number_input("Percent Salary Hike", 10, 30, int(val("PercentSalaryHike", 11)), label_visibility="collapsed")
+        with r_r2_3:
+            st.markdown('<div style="font-size:13.5px;font-weight:800;color:#0F172A;margin-bottom:4px;">✈️ Business Travel Frequency</div>', unsafe_allow_html=True)
+            travel_opts = ["Travel_Rarely", "Travel_Frequently", "Non-Travel"]
+            travel_display = {"Travel_Rarely": "Travels Rarely", "Travel_Frequently": "Travels Frequently", "Non-Travel": "No Travel"}
+            travel = st.selectbox("Business Travel Frequency", travel_opts, index=travel_opts.index(val("BusinessTravel", "Travel_Rarely")), format_func=lambda x: travel_display[x], label_visibility="collapsed")
+
+        r_r3_1, r_r3_2, r_r3_3 = st.columns(3)
+        with r_r3_1:
+            st.markdown('<div style="font-size:13.5px;font-weight:800;color:#0F172A;margin-bottom:4px;">🎖️ Job Seniority Band <span style="font-size:11.5px;color:#64748B;font-weight:500;">(Level 1 to 5)</span></div>', unsafe_allow_html=True)
+            job_level = st.slider("Job Seniority Band", 1, 5, int(val("JobLevel", 2)), label_visibility="collapsed")
+        with r_r3_2:
+            st.markdown('<div style="font-size:13.5px;font-weight:800;color:#0F172A;margin-bottom:4px;">📈 Stock Option Equity Level <span style="font-size:11.5px;color:#64748B;font-weight:500;">(0=None to 3=Max)</span></div>', unsafe_allow_html=True)
+            stock = st.slider("Stock Option Equity Level", 0, 3, int(val("StockOptionLevel", 0)), label_visibility="collapsed")
+        with r_r3_3:
+            st.markdown('<div style="font-size:13.5px;font-weight:800;color:#0F172A;margin-bottom:4px;">⭐ Performance Review Rating</div>', unsafe_allow_html=True)
+            perf_opts = ["3 - Excellent Performance", "4 - Outstanding Performance"]
+            perf_idx = 0 if int(val("PerformanceRating", 3)) == 3 else 1
+            perf_sel = st.selectbox("Performance Review Rating", perf_opts, index=perf_idx, label_visibility="collapsed")
+            perf = int(perf_sel.split(" - ")[0])
 
         # Section C: Tenure & Satisfaction
         st.markdown(
-            '<div style="display:flex;align-items:center;gap:8px;margin:22px 0 12px;">'
-            '<span class="tag">3. Engagement</span><span style="font-weight:800;font-size:14.5px;color:#0F172A;">Tenure, Satisfaction & Workplace Engagement</span></div>',
+            '<div style="display:flex;align-items:center;gap:8px;margin:24px 0 14px;">'
+            '<span class="tag">3. Engagement</span><span style="font-weight:800;font-size:15px;color:#0F172A;">Tenure, Satisfaction & Workplace Engagement</span></div>',
             unsafe_allow_html=True,
         )
-        c7, c8, c9 = st.columns(3)
-        years_co = c7.number_input("Tenure at Company (Years)", 0, 40, int(val("YearsAtCompany", 4)))
-        years_role = c7.number_input("Years in Current Role", 0, 20, int(val("YearsInCurrentRole", 2)))
-        total_work = c7.number_input("Total Career Experience (Years)", 0, 45, int(val("TotalWorkingYears", 8)))
 
-        last_promo = c8.number_input("Years Since Last Promotion", 0, 20, int(val("YearsSinceLastPromotion", 2)))
-        years_mgr = c8.number_input("Years With Current Manager", 0, 20, int(val("YearsWithCurrManager", 2)))
-        num_cos = c8.number_input("Previous Companies Worked", 0, 10, int(val("NumCompaniesWorked", 8)))
+        t_r1_1, t_r1_2, t_r1_3 = st.columns(3)
+        with t_r1_1:
+            st.markdown('<div style="font-size:13.5px;font-weight:800;color:#0F172A;margin-bottom:4px;">🏛️ Tenure at Company <span style="font-size:11.5px;color:#64748B;font-weight:500;">(Years)</span></div>', unsafe_allow_html=True)
+            years_co = st.number_input("Tenure at Company", 0, 40, int(val("YearsAtCompany", 4)), label_visibility="collapsed")
+        with t_r1_2:
+            st.markdown('<div style="font-size:13.5px;font-weight:800;color:#0F172A;margin-bottom:4px;">🎯 Years in Current Role</div>', unsafe_allow_html=True)
+            years_role = st.number_input("Years in Current Role", 0, 20, int(val("YearsInCurrentRole", 2)), label_visibility="collapsed")
+        with t_r1_3:
+            st.markdown('<div style="font-size:13.5px;font-weight:800;color:#0F172A;margin-bottom:4px;">💼 Total Career Experience <span style="font-size:11.5px;color:#64748B;font-weight:500;">(Years)</span></div>', unsafe_allow_html=True)
+            total_work = st.number_input("Total Career Experience", 0, 45, int(val("TotalWorkingYears", 8)), label_visibility="collapsed")
 
-        sat_opts = ["1 - Very Dissatisfied", "2 - Dissatisfied", "3 - Satisfied", "4 - Very Satisfied"]
-        sat_idx = min(max(int(val("JobSatisfaction", 2)) - 1, 0), 3)
-        sat_sel = c9.selectbox("Job Satisfaction Rating", sat_opts, index=sat_idx)
-        sat = int(sat_sel.split(" - ")[0])
+        t_r2_1, t_r2_2, t_r2_3 = st.columns(3)
+        with t_r2_1:
+            st.markdown('<div style="font-size:13.5px;font-weight:800;color:#0F172A;margin-bottom:4px;">🚀 Years Since Last Promotion</div>', unsafe_allow_html=True)
+            last_promo = st.number_input("Years Since Last Promotion", 0, 20, int(val("YearsSinceLastPromotion", 2)), label_visibility="collapsed")
+        with t_r2_2:
+            st.markdown('<div style="font-size:13.5px;font-weight:800;color:#0F172A;margin-bottom:4px;">🤝 Years With Current Manager</div>', unsafe_allow_html=True)
+            years_mgr = st.number_input("Years With Current Manager", 0, 20, int(val("YearsWithCurrManager", 2)), label_visibility="collapsed")
+        with t_r2_3:
+            st.markdown('<div style="font-size:13.5px;font-weight:800;color:#0F172A;margin-bottom:4px;">🏢 Prior Companies Worked</div>', unsafe_allow_html=True)
+            num_cos = st.number_input("Previous Companies Worked", 0, 10, int(val("NumCompaniesWorked", 8)), label_visibility="collapsed")
 
-        env_opts = ["1 - Low Satisfaction", "2 - Medium", "3 - High", "4 - Very High"]
-        env_idx = min(max(int(val("EnvironmentSatisfaction", 2)) - 1, 0), 3)
-        env_sel = c9.selectbox("Work Environment Satisfaction", env_opts, index=env_idx)
-        env_sat = int(env_sel.split(" - ")[0])
+        t_r3_1, t_r3_2, t_r3_3 = st.columns(3)
+        with t_r3_1:
+            st.markdown('<div style="font-size:13.5px;font-weight:800;color:#0F172A;margin-bottom:4px;">📖 Training Sessions Last Year</div>', unsafe_allow_html=True)
+            training = st.number_input("Training Sessions Last Year", 0, 8, int(val("TrainingTimesLastYear", 1)), label_visibility="collapsed")
+        with t_r3_2:
+            st.markdown('<div style="font-size:13.5px;font-weight:800;color:#0F172A;margin-bottom:4px;">😊 Job Satisfaction Rating</div>', unsafe_allow_html=True)
+            sat_opts = ["1 - Very Dissatisfied", "2 - Dissatisfied", "3 - Satisfied", "4 - Very Satisfied"]
+            sat_idx = min(max(int(val("JobSatisfaction", 2)) - 1, 0), 3)
+            sat_sel = st.selectbox("Job Satisfaction Rating", sat_opts, index=sat_idx, label_visibility="collapsed")
+            sat = int(sat_sel.split(" - ")[0])
+        with t_r3_3:
+            st.markdown('<div style="font-size:13.5px;font-weight:800;color:#0F172A;margin-bottom:4px;">🏢 Workplace Environment Satisfaction</div>', unsafe_allow_html=True)
+            env_opts = ["1 - Low Satisfaction", "2 - Medium", "3 - High", "4 - Very High"]
+            env_idx = min(max(int(val("EnvironmentSatisfaction", 2)) - 1, 0), 3)
+            env_sel = st.selectbox("Work Environment Satisfaction", env_opts, index=env_idx, label_visibility="collapsed")
+            env_sat = int(env_sel.split(" - ")[0])
 
-        wlb_opts = ["1 - Poor (Burnout Risk)", "2 - Below Average", "3 - Good / Balanced", "4 - Excellent"]
-        wlb_idx = min(max(int(val("WorkLifeBalance", 1)) - 1, 0), 3)
-        wlb_sel = c9.selectbox("Work-Life Balance Rating", wlb_opts, index=wlb_idx)
-        wlb = int(wlb_sel.split(" - ")[0])
-
-        involve_opts = ["1 - Low", "2 - Medium", "3 - High", "4 - Very High"]
-        involve_idx = min(max(int(val("JobInvolvement", 3)) - 1, 0), 3)
-        involve_sel = c9.selectbox("Job Involvement Rating", involve_opts, index=involve_idx)
-        involvement = int(involve_sel.split(" - ")[0])
-
-        rel_opts = ["1 - Low", "2 - Medium", "3 - High", "4 - Very High"]
-        rel_idx = min(max(int(val("RelationshipSatisfaction", 1)) - 1, 0), 3)
-        rel_sel = c9.selectbox("Team Relationship Satisfaction", rel_opts, index=rel_idx)
-        rel_sat = int(rel_sel.split(" - ")[0])
-
-        training = c7.number_input("Training Sessions Attended Last Year", 0, 8, int(val("TrainingTimesLastYear", 1)))
+        t_r4_1, t_r4_2, t_r4_3 = st.columns(3)
+        with t_r4_1:
+            st.markdown('<div style="font-size:13.5px;font-weight:800;color:#0F172A;margin-bottom:4px;">⚖️ Work-Life Balance Rating</div>', unsafe_allow_html=True)
+            wlb_opts = ["1 - Poor (Burnout Risk)", "2 - Below Average", "3 - Good / Balanced", "4 - Excellent"]
+            wlb_idx = min(max(int(val("WorkLifeBalance", 1)) - 1, 0), 3)
+            wlb_sel = st.selectbox("Work-Life Balance Rating", wlb_opts, index=wlb_idx, label_visibility="collapsed")
+            wlb = int(wlb_sel.split(" - ")[0])
+        with t_r4_2:
+            st.markdown('<div style="font-size:13.5px;font-weight:800;color:#0F172A;margin-bottom:4px;">🔥 Job Involvement Rating</div>', unsafe_allow_html=True)
+            involve_opts = ["1 - Low", "2 - Medium", "3 - High", "4 - Very High"]
+            involve_idx = min(max(int(val("JobInvolvement", 3)) - 1, 0), 3)
+            involve_sel = st.selectbox("Job Involvement Rating", involve_opts, index=involve_idx, label_visibility="collapsed")
+            involvement = int(involve_sel.split(" - ")[0])
+        with t_r4_3:
+            st.markdown('<div style="font-size:13.5px;font-weight:800;color:#0F172A;margin-bottom:4px;">🤝 Team Relationship Satisfaction</div>', unsafe_allow_html=True)
+            rel_opts = ["1 - Low", "2 - Medium", "3 - High", "4 - Very High"]
+            rel_idx = min(max(int(val("RelationshipSatisfaction", 1)) - 1, 0), 3)
+            rel_sel = st.selectbox("Team Relationship Satisfaction", rel_opts, index=rel_idx, label_visibility="collapsed")
+            rel_sat = int(rel_sel.split(" - ")[0])
 
         daily_rate = int(val("DailyRate", max(100, int(income / 22 * 3.5))))
         hourly_rate = int(val("HourlyRate", max(15, int(income / 160))))
         monthly_rate = int(val("MonthlyRate", max(2000, int(income * 2.8))))
 
+        st.markdown("<div style='height:12px;'></div>", unsafe_allow_html=True)
         submitted = st.form_submit_button("⚡ Run AI Attrition Risk Prediction", use_container_width=True)
 
     current_sample = {
