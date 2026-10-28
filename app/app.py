@@ -34,64 +34,321 @@ VIOLET = "#8B5CF6"
 
 RISK = {"Low": EMERALD, "Medium": AMBER, "High": RED, "Critical": "#7F1D1D"}
 
-PRESETS = {
-    "🚨 High Risk: Sales Executive (Overtime, Single, High Churn Profile)": {
-        "Age": 41, "BusinessTravel": "Travel_Rarely", "DailyRate": 1102, "Department": "Sales",
-        "DistanceFromHome": 8, "Education": 2, "EducationField": "Life Sciences",
-        "EnvironmentSatisfaction": 2, "Gender": "Female", "HourlyRate": 94,
-        "JobInvolvement": 3, "JobLevel": 2, "JobRole": "Sales Executive",
-        "JobSatisfaction": 2, "MaritalStatus": "Single", "MonthlyIncome": 4800,
-        "MonthlyRate": 19479, "NumCompaniesWorked": 8, "OverTime": "Yes",
-        "PercentSalaryHike": 11, "PerformanceRating": 3,
-        "RelationshipSatisfaction": 1, "StockOptionLevel": 0,
-        "TotalWorkingYears": 8, "TrainingTimesLastYear": 1,
-        "WorkLifeBalance": 1, "YearsAtCompany": 4,
-        "YearsInCurrentRole": 2, "YearsSinceLastPromotion": 2,
-        "YearsWithCurrManager": 2,
+# ---------------------------------------------------------------------------
+# HUMAN-FRIENDLY FEATURE METADATA & DISPLAY FORMATTERS
+# ---------------------------------------------------------------------------
+FEATURE_METADATA = {
+    "WorkLifeBalance": {
+        "name": "Work-Life Balance",
+        "icon": "⚖️",
+        "format": lambda v: {1: "Poor (Burnout Risk)", 2: "Below Average", 3: "Good / Balanced", 4: "Excellent"}.get(v, f"Rating {v}"),
+        "desc": "Balance between working demands and personal life.",
     },
-    "🔥 Extreme Risk: Sales Rep (Frequent Travel, Low Pay, Overtime)": {
-        "Age": 28, "BusinessTravel": "Travel_Frequently", "DailyRate": 600, "Department": "Sales",
-        "DistanceFromHome": 24, "Education": 2, "EducationField": "Marketing",
-        "EnvironmentSatisfaction": 1, "Gender": "Male", "HourlyRate": 55,
-        "JobInvolvement": 2, "JobLevel": 1, "JobRole": "Sales Representative",
-        "JobSatisfaction": 1, "MaritalStatus": "Single", "MonthlyIncome": 2400,
-        "MonthlyRate": 14000, "NumCompaniesWorked": 4, "OverTime": "Yes",
-        "PercentSalaryHike": 11, "PerformanceRating": 3,
-        "RelationshipSatisfaction": 1, "StockOptionLevel": 0,
-        "TotalWorkingYears": 3, "TrainingTimesLastYear": 1,
-        "WorkLifeBalance": 1, "YearsAtCompany": 2,
-        "YearsInCurrentRole": 1, "YearsSinceLastPromotion": 0,
-        "YearsWithCurrManager": 1,
+    "OverTime": {
+        "name": "Overtime Status",
+        "icon": "⏰",
+        "format": lambda v: "Yes (Works Overtime)" if v == "Yes" else "No (Standard 40h)",
+        "desc": "Whether employee routinely works beyond standard hours.",
     },
-    "⚠️ Moderate Risk: Laboratory Technician (Modest Pay, Stagnant Role)": {
-        "Age": 29, "BusinessTravel": "Travel_Rarely", "DailyRate": 591, "Department": "Research & Development",
-        "DistanceFromHome": 9, "Education": 2, "EducationField": "Medical",
-        "EnvironmentSatisfaction": 2, "Gender": "Male", "HourlyRate": 45,
-        "JobInvolvement": 2, "JobLevel": 1, "JobRole": "Laboratory Technician",
-        "JobSatisfaction": 2, "MaritalStatus": "Single", "MonthlyIncome": 3200,
-        "MonthlyRate": 16632, "NumCompaniesWorked": 4, "OverTime": "No",
-        "PercentSalaryHike": 12, "PerformanceRating": 3,
-        "RelationshipSatisfaction": 3, "StockOptionLevel": 0,
-        "TotalWorkingYears": 6, "TrainingTimesLastYear": 2,
-        "WorkLifeBalance": 2, "YearsAtCompany": 3,
-        "YearsInCurrentRole": 2, "YearsSinceLastPromotion": 2,
-        "YearsWithCurrManager": 2,
+    "MonthlyIncome": {
+        "name": "Monthly Salary",
+        "icon": "💵",
+        "format": lambda v: f"${int(v):,}/mo",
+        "desc": "Base gross monthly salary in USD.",
     },
-    "🟢 Low Risk: Senior Manufacturing Director (High Tenure & Income)": {
-        "Age": 46, "BusinessTravel": "Travel_Rarely", "DailyRate": 900, "Department": "Research & Development",
-        "DistanceFromHome": 3, "Education": 4, "EducationField": "Life Sciences",
-        "EnvironmentSatisfaction": 4, "Gender": "Female", "HourlyRate": 78,
-        "JobInvolvement": 4, "JobLevel": 3, "JobRole": "Manufacturing Director",
-        "JobSatisfaction": 4, "MaritalStatus": "Married", "MonthlyIncome": 12800,
-        "MonthlyRate": 16000, "NumCompaniesWorked": 1, "OverTime": "No",
-        "PercentSalaryHike": 18, "PerformanceRating": 3,
-        "RelationshipSatisfaction": 4, "StockOptionLevel": 2,
-        "TotalWorkingYears": 18, "TrainingTimesLastYear": 3,
-        "WorkLifeBalance": 3, "YearsAtCompany": 12,
-        "YearsInCurrentRole": 8, "YearsSinceLastPromotion": 1,
-        "YearsWithCurrManager": 7,
+    "JobSatisfaction": {
+        "name": "Job Satisfaction",
+        "icon": "😊",
+        "format": lambda v: {1: "Very Low", 2: "Low / Dissatisfied", 3: "Satisfied", 4: "Very Satisfied"}.get(v, f"Rating {v}"),
+        "desc": "Self-reported satisfaction with day-to-day job duties.",
     },
-    "✏️ Custom Employee Profile (Enter Details Below)": None,
+    "EnvironmentSatisfaction": {
+        "name": "Workplace Environment",
+        "icon": "🏢",
+        "format": lambda v: {1: "Low Satisfaction", 2: "Medium", 3: "High", 4: "Very High"}.get(v, f"Rating {v}"),
+        "desc": "Satisfaction with physical work culture and team facilities.",
+    },
+    "DistanceFromHome": {
+        "name": "Commute Distance",
+        "icon": "🚗",
+        "format": lambda v: f"{int(v)} miles",
+        "desc": "One-way commute distance from residence to workplace.",
+    },
+    "StockOptionLevel": {
+        "name": "Stock Option Equity",
+        "icon": "📈",
+        "format": lambda v: {0: "Level 0 (No Equity)", 1: "Level 1", 2: "Level 2", 3: "Level 3 (Max)"}.get(v, f"Level {v}"),
+        "desc": "Equity vesting program level granted to employee.",
+    },
+    "TotalWorkingYears": {
+        "name": "Career Experience",
+        "icon": "💼",
+        "format": lambda v: f"{int(v)} years total",
+        "desc": "Total accumulated professional work experience.",
+    },
+    "YearsAtCompany": {
+        "name": "Tenure at Company",
+        "icon": "🏛️",
+        "format": lambda v: f"{int(v)} years",
+        "desc": "Years continuously employed at current organization.",
+    },
+    "YearsInCurrentRole": {
+        "name": "Years in Current Role",
+        "icon": "🎯",
+        "format": lambda v: f"{int(v)} years",
+        "desc": "Years spent in the current job title without lateral shift.",
+    },
+    "YearsSinceLastPromotion": {
+        "name": "Years Since Last Promotion",
+        "icon": "🚀",
+        "format": lambda v: f"{int(v)} years",
+        "desc": "Years since last official upward title or grade promotion.",
+    },
+    "YearsWithCurrManager": {
+        "name": "Years With Current Manager",
+        "icon": "🤝",
+        "format": lambda v: f"{int(v)} years",
+        "desc": "Supervisory continuity and tenure under active manager.",
+    },
+    "NumCompaniesWorked": {
+        "name": "Prior Companies Worked",
+        "icon": "🏢",
+        "format": lambda v: f"{int(v)} previous employers",
+        "desc": "Number of previous companies worked for before joining.",
+    },
+    "Department": {
+        "name": "Department",
+        "icon": "🏷️",
+        "format": lambda v: str(v),
+        "desc": "Functional organizational division.",
+    },
+    "JobRole": {
+        "name": "Job Role / Title",
+        "icon": "👔",
+        "format": lambda v: str(v),
+        "desc": "Specific occupational position.",
+    },
+    "MaritalStatus": {
+        "name": "Marital Status",
+        "icon": "💍",
+        "format": lambda v: str(v),
+        "desc": "Marital status (Single, Married, or Divorced).",
+    },
+    "BusinessTravel": {
+        "name": "Business Travel",
+        "icon": "✈️",
+        "format": lambda v: {"Travel_Rarely": "Travels Rarely", "Travel_Frequently": "Travels Frequently", "Non-Travel": "No Travel"}.get(v, str(v)),
+        "desc": "Frequency of required work-related business travel.",
+    },
+    "PercentSalaryHike": {
+        "name": "Annual Salary Hike",
+        "icon": "📊",
+        "format": lambda v: f"{int(v)}% increase",
+        "desc": "Percentage salary increase awarded during last review.",
+    },
+    "Age": {
+        "name": "Employee Age",
+        "icon": "👤",
+        "format": lambda v: f"{int(v)} years old",
+        "desc": "Chronological age in years.",
+    },
+    "JobInvolvement": {
+        "name": "Job Involvement",
+        "icon": "🔥",
+        "format": lambda v: {1: "Low", 2: "Medium", 3: "High", 4: "Very High"}.get(v, f"Rating {v}"),
+        "desc": "Degree of psychological identification with one's work.",
+    },
+    "RelationshipSatisfaction": {
+        "name": "Colleague Relationships",
+        "icon": "🤝",
+        "format": lambda v: {1: "Low", 2: "Medium", 3: "High", 4: "Very High"}.get(v, f"Rating {v}"),
+        "desc": "Interpersonal satisfaction with coworkers and stakeholders.",
+    },
+    "Education": {
+        "name": "Education Level",
+        "icon": "🎓",
+        "format": lambda v: {1: "Below College", 2: "Associate / College", 3: "Bachelor Degree", 4: "Master Degree", 5: "Doctorate"}.get(v, f"Level {v}"),
+        "desc": "Highest completed academic credential.",
+    },
+    "EducationField": {
+        "name": "Education Field",
+        "icon": "📚",
+        "format": lambda v: str(v),
+        "desc": "Academic discipline or major.",
+    },
+    "Gender": {
+        "name": "Gender",
+        "icon": "⚧️",
+        "format": lambda v: str(v),
+        "desc": "Self-identified gender.",
+    },
+    "JobLevel": {
+        "name": "Job Seniority Level",
+        "icon": "🎖️",
+        "format": lambda v: f"Level {int(v)} (Band)",
+        "desc": "Corporate hierarchical grade band (1 to 5).",
+    },
+    "DailyRate": {
+        "name": "Daily Compensation Index",
+        "icon": "💲",
+        "format": lambda v: f"${int(v)}",
+        "desc": "Daily compensation reference index.",
+    },
+    "HourlyRate": {
+        "name": "Hourly Pay Index",
+        "icon": "⏱️",
+        "format": lambda v: f"${int(v)}/hr",
+        "desc": "Hourly wage reference index.",
+    },
+    "MonthlyRate": {
+        "name": "Monthly Billing Index",
+        "icon": "📋",
+        "format": lambda v: f"${int(v)}",
+        "desc": "Monthly billing / administrative cost index.",
+    },
+    "TrainingTimesLastYear": {
+        "name": "Training Sessions Attended",
+        "icon": "📖",
+        "format": lambda v: f"{int(v)} sessions",
+        "desc": "Professional training and upskilling sessions completed last year.",
+    },
+    "PerformanceRating": {
+        "name": "Performance Review Rating",
+        "icon": "⭐",
+        "format": lambda v: {3: "Excellent", 4: "Outstanding"}.get(v, f"Rating {v}"),
+        "desc": "Official annual performance appraisal score.",
+    },
+}
+
+# ---------------------------------------------------------------------------
+# REALISTIC EMPLOYEE DIRECTORY & PERSONA PRESETS
+# ---------------------------------------------------------------------------
+EMPLOYEE_DIRECTORY = {
+    "EMP-1042": {
+        "id": "EMP-1042",
+        "name": "Sarah Jenkins",
+        "role": "Sales Executive",
+        "department": "Sales",
+        "avatar": "SJ",
+        "label": "Sarah Jenkins (Sales Executive · Sales Dept)",
+        "summary": "Mid-level sales executive with 4 years tenure. Experiences regular overtime, high commute distance, and poor work-life balance.",
+        "data": {
+            "Age": 41, "BusinessTravel": "Travel_Rarely", "DailyRate": 1102, "Department": "Sales",
+            "DistanceFromHome": 8, "Education": 2, "EducationField": "Life Sciences",
+            "EnvironmentSatisfaction": 2, "Gender": "Female", "HourlyRate": 94,
+            "JobInvolvement": 3, "JobLevel": 2, "JobRole": "Sales Executive",
+            "JobSatisfaction": 2, "MaritalStatus": "Single", "MonthlyIncome": 4800,
+            "MonthlyRate": 19479, "NumCompaniesWorked": 8, "OverTime": "Yes",
+            "PercentSalaryHike": 11, "PerformanceRating": 3,
+            "RelationshipSatisfaction": 1, "StockOptionLevel": 0,
+            "TotalWorkingYears": 8, "TrainingTimesLastYear": 1,
+            "WorkLifeBalance": 1, "YearsAtCompany": 4,
+            "YearsInCurrentRole": 2, "YearsSinceLastPromotion": 2,
+            "YearsWithCurrManager": 2,
+        },
+    },
+    "EMP-1015": {
+        "id": "EMP-1015",
+        "name": "Alex Rivera",
+        "role": "Sales Representative",
+        "department": "Sales",
+        "avatar": "AR",
+        "label": "Alex Rivera (Sales Representative · Sales Dept)",
+        "summary": "Junior sales representative with entry compensation ($2,400), frequent business travel, 24-mile commute, and mandatory overtime.",
+        "data": {
+            "Age": 28, "BusinessTravel": "Travel_Frequently", "DailyRate": 600, "Department": "Sales",
+            "DistanceFromHome": 24, "Education": 2, "EducationField": "Marketing",
+            "EnvironmentSatisfaction": 1, "Gender": "Male", "HourlyRate": 55,
+            "JobInvolvement": 2, "JobLevel": 1, "JobRole": "Sales Representative",
+            "JobSatisfaction": 1, "MaritalStatus": "Single", "MonthlyIncome": 2400,
+            "MonthlyRate": 14000, "NumCompaniesWorked": 4, "OverTime": "Yes",
+            "PercentSalaryHike": 11, "PerformanceRating": 3,
+            "RelationshipSatisfaction": 1, "StockOptionLevel": 0,
+            "TotalWorkingYears": 3, "TrainingTimesLastYear": 1,
+            "WorkLifeBalance": 1, "YearsAtCompany": 2,
+            "YearsInCurrentRole": 1, "YearsSinceLastPromotion": 0,
+            "YearsWithCurrManager": 1,
+        },
+    },
+    "EMP-1088": {
+        "id": "EMP-1088",
+        "name": "David Chen",
+        "role": "Laboratory Technician",
+        "department": "Research & Development",
+        "avatar": "DC",
+        "label": "David Chen (Laboratory Technician · R&D Dept)",
+        "summary": "Early-career technician with 3 years tenure. No overtime and balanced commute, but modest salary ($3,200) and stagnant promotion track.",
+        "data": {
+            "Age": 29, "BusinessTravel": "Travel_Rarely", "DailyRate": 591, "Department": "Research & Development",
+            "DistanceFromHome": 9, "Education": 2, "EducationField": "Medical",
+            "EnvironmentSatisfaction": 2, "Gender": "Male", "HourlyRate": 45,
+            "JobInvolvement": 2, "JobLevel": 1, "JobRole": "Laboratory Technician",
+            "JobSatisfaction": 2, "MaritalStatus": "Single", "MonthlyIncome": 3200,
+            "MonthlyRate": 16632, "NumCompaniesWorked": 4, "OverTime": "No",
+            "PercentSalaryHike": 12, "PerformanceRating": 3,
+            "RelationshipSatisfaction": 3, "StockOptionLevel": 0,
+            "TotalWorkingYears": 6, "TrainingTimesLastYear": 2,
+            "WorkLifeBalance": 2, "YearsAtCompany": 3,
+            "YearsInCurrentRole": 2, "YearsSinceLastPromotion": 2,
+            "YearsWithCurrManager": 2,
+        },
+    },
+    "EMP-1120": {
+        "id": "EMP-1120",
+        "name": "Dr. Elena Rostova",
+        "role": "Manufacturing Director",
+        "department": "Research & Development",
+        "avatar": "ER",
+        "label": "Dr. Elena Rostova (Manufacturing Director · R&D Dept)",
+        "summary": "Senior engineering leader with 12 years tenure, top-tier compensation ($12,800), high equity grant, and excellent satisfaction.",
+        "data": {
+            "Age": 46, "BusinessTravel": "Travel_Rarely", "DailyRate": 900, "Department": "Research & Development",
+            "DistanceFromHome": 3, "Education": 4, "EducationField": "Life Sciences",
+            "EnvironmentSatisfaction": 4, "Gender": "Female", "HourlyRate": 78,
+            "JobInvolvement": 4, "JobLevel": 3, "JobRole": "Manufacturing Director",
+            "JobSatisfaction": 4, "MaritalStatus": "Married", "MonthlyIncome": 12800,
+            "MonthlyRate": 16000, "NumCompaniesWorked": 1, "OverTime": "No",
+            "PercentSalaryHike": 18, "PerformanceRating": 3,
+            "RelationshipSatisfaction": 4, "StockOptionLevel": 2,
+            "TotalWorkingYears": 18, "TrainingTimesLastYear": 3,
+            "WorkLifeBalance": 3, "YearsAtCompany": 12,
+            "YearsInCurrentRole": 8, "YearsSinceLastPromotion": 1,
+            "YearsWithCurrManager": 7,
+        },
+    },
+    "EMP-1155": {
+        "id": "EMP-1155",
+        "name": "Marcus Vance",
+        "role": "Research Scientist",
+        "department": "Research & Development",
+        "avatar": "MV",
+        "label": "Marcus Vance (Research Scientist · R&D Dept)",
+        "summary": "Established scientist with 7 years tenure, strong peer relationships, standard 40h work week, and stable compensation ($6,500).",
+        "data": {
+            "Age": 36, "BusinessTravel": "Travel_Rarely", "DailyRate": 800, "Department": "Research & Development",
+            "DistanceFromHome": 7, "Education": 3, "EducationField": "Medical",
+            "EnvironmentSatisfaction": 3, "Gender": "Male", "HourlyRate": 66,
+            "JobInvolvement": 3, "JobLevel": 2, "JobRole": "Research Scientist",
+            "JobSatisfaction": 3, "MaritalStatus": "Married", "MonthlyIncome": 6500,
+            "MonthlyRate": 14000, "NumCompaniesWorked": 2, "OverTime": "No",
+            "PercentSalaryHike": 15, "PerformanceRating": 3,
+            "RelationshipSatisfaction": 3, "StockOptionLevel": 1,
+            "TotalWorkingYears": 11, "TrainingTimesLastYear": 3,
+            "WorkLifeBalance": 3, "YearsAtCompany": 7,
+            "YearsInCurrentRole": 4, "YearsSinceLastPromotion": 2,
+            "YearsWithCurrManager": 4,
+        },
+    },
+    "CUSTOM": {
+        "id": "NEW-EMP",
+        "name": "Custom Employee",
+        "role": "Custom Position",
+        "department": "Custom Department",
+        "avatar": "✍️",
+        "label": "✍️ Custom Employee (Enter Details Manually)",
+        "summary": "Manual assessment mode: enter custom demographic, compensation, and satisfaction attributes below.",
+        "data": None,
+    },
 }
 
 st.set_page_config(
@@ -140,7 +397,7 @@ div[role="radiogroup"] p, div[role="radiogroup"] [data-testid="stMarkdownContain
 .stButton > button, [data-testid="stFormSubmitButton"] > button {
   border-radius: 10px; font-weight: 700; border: none;
   background: linear-gradient(135deg,#2563EB,#1E40AF); color: #fff;
-  padding: 0.68em 1.5em; transition: all .18s; box-shadow: 0 4px 14px rgba(37,99,235,.28);
+  padding: 0.70em 1.6em; transition: all .18s; box-shadow: 0 4px 14px rgba(37,99,235,.28);
 }
 .stButton > button:hover, [data-testid="stFormSubmitButton"] > button:hover {
   transform: translateY(-1px); box-shadow: 0 8px 22px rgba(37,99,235,.38); color: #fff;
@@ -168,16 +425,40 @@ div[role="radiogroup"] p, div[role="radiogroup"] [data-testid="stMarkdownContain
 .kpi .val { font-size:26px; font-weight:900; color:#0F172A; margin-top:2px; letter-spacing:-.01em; }
 .kpi .sub { font-size:12px; color:#94A3B8; margin-top:3px; }
 
+/* ---------- Employee Profile Card ---------- */
+.emp-card {
+  background: #FFFFFF; border: 1px solid #CBD5E1; border-radius: 16px;
+  padding: 20px 24px; margin-bottom: 20px; box-shadow: 0 4px 16px rgba(15,23,42,.04);
+  display: flex; gap: 20px; align-items: center;
+}
+.emp-avatar {
+  width: 58px; height: 58px; border-radius: 14px;
+  background: linear-gradient(135deg, #2563EB, #7C3AED);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px; font-weight: 900; color: #FFFFFF; flex-shrink: 0;
+  box-shadow: 0 4px 12px rgba(37,99,235,.25);
+}
+.emp-info { flex: 1; }
+.emp-name { font-size: 19px; font-weight: 900; color: #0F172A; display: flex; align-items: center; gap: 10px; }
+.emp-id-badge {
+  background: #EFF6FF; color: #1D4ED8; font-size: 11.5px; font-weight: 800;
+  padding: 3px 10px; border-radius: 6px; border: 1px solid #BFDBFE; letter-spacing: .04em;
+}
+.emp-role { font-size: 13.5px; font-weight: 600; color: #475569; margin-top: 3px; }
+.emp-summary { font-size: 12.8px; color: #64748B; margin-top: 6px; line-height: 1.5; }
+.emp-chips { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
+.emp-chip {
+  background: #F1F5F9; border: 1px solid #E2E8F0; border-radius: 6px;
+  padding: 3px 10px; font-size: 11.5px; font-weight: 700; color: #334155;
+}
+
+/* ---------- Verdict Banner ---------- */
 .verdict-box {
   border-radius: 16px; padding: 22px 26px; margin-bottom: 20px;
   border-width: 2px; border-style: solid;
 }
-.verdict-box.high {
-  background: #FEF2F2; border-color: #F87171;
-}
-.verdict-box.low {
-  background: #F0FDF4; border-color: #4ADE80;
-}
+.verdict-box.high { background: #FEF2F2; border-color: #F87171; }
+.verdict-box.low { background: #F0FDF4; border-color: #4ADE80; }
 
 .pill {
   display:inline-flex; align-items:center; gap:6px; padding:6px 16px; border-radius:999px;
@@ -345,56 +626,106 @@ def render_predict_page():
         """
         <div style="margin-bottom:18px;">
           <div style="font-size:30px;font-weight:900;color:#0F172A;letter-spacing:-.02em;">
-            Employee Attrition Risk Predictor
+            Individual Employee Attrition Predictor
           </div>
           <div style="font-size:14.5px;color:#64748B;margin-top:4px;">
-            Predict whether an employee will stay or leave using the calibrated Support Vector Machine model.
-            Get real-time probability, risk classification, explainable SHAP drivers, and actionable retention recommendations.
+            Select a verified employee profile from the directory or customize attributes to assess individual turnover risk.
+            The calibrated AI engine evaluates 31 factors to produce real-time probability, SHAP diagnosis, and an HR retention plan.
           </div>
         </div>
         """,
         unsafe_allow_html=True,
     )
 
-    # Preset selector bar
+    # 1. Clean Employee Selector
     st.markdown(
-        '<div style="font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#64748B;margin-bottom:6px;">'
-        'Quick-Load Employee Persona</div>',
+        '<div style="font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#475569;margin-bottom:6px;">'
+        'Step 1: Select Employee Profile From Directory</div>',
         unsafe_allow_html=True,
     )
-    selected_preset_key = st.selectbox(
-        "Load Preset Profile",
-        list(PRESETS.keys()),
+
+    selected_emp_id = st.selectbox(
+        "Select Employee",
+        options=list(EMPLOYEE_DIRECTORY.keys()),
+        format_func=lambda k: EMPLOYEE_DIRECTORY[k]["label"],
         index=0,
         label_visibility="collapsed",
     )
-    preset_vals = PRESETS.get(selected_preset_key)
+
+    emp_meta = EMPLOYEE_DIRECTORY[selected_emp_id]
+    emp_vals = emp_meta["data"]
 
     def val(k, default):
-        if preset_vals and k in preset_vals:
-            return preset_vals[k]
+        if emp_vals and k in emp_vals:
+            return emp_vals[k]
         return default
 
-    with st.form("employee_prediction_form"):
+    # 2. Render Employee Profile Card
+    if selected_emp_id != "CUSTOM":
+        st.markdown(
+            f"""
+            <div class="emp-card">
+              <div class="emp-avatar">{emp_meta['avatar']}</div>
+              <div class="emp-info">
+                <div class="emp-name">
+                  {emp_meta['name']}
+                  <span class="emp-id-badge">{emp_meta['id']}</span>
+                </div>
+                <div class="emp-role">{emp_meta['role']} · Department of {emp_meta['department']}</div>
+                <div class="emp-summary">{emp_meta['summary']}</div>
+                <div class="emp-chips">
+                  <span class="emp-chip">👤 Age {val('Age', 35)}</span>
+                  <span class="emp-chip">💵 ${val('MonthlyIncome', 5000):,}/month</span>
+                  <span class="emp-chip">🏛️ {val('YearsAtCompany', 3)} Years Tenure</span>
+                  <span class="emp-chip">⏰ Overtime: {val('OverTime', 'No')}</span>
+                  <span class="emp-chip">🚗 Commute: {val('DistanceFromHome', 5)} Miles</span>
+                </div>
+              </div>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
+
+    # 3. Clean Input Form with Friendly, Clear Labels
+    st.markdown(
+        '<div style="font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#475569;margin:16px 0 8px;">'
+        'Step 2: Employee Attributes & Workplace Parameters</div>',
+        unsafe_allow_html=True,
+    )
+
+    with st.form("employee_assessment_form"):
+        # Section A: Personal & Commute
         st.markdown(
             '<div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;">'
-            '<span class="tag">Section 1</span><span style="font-weight:800;font-size:15px;color:#0F172A;">Demographics & Commute</span></div>',
+            '<span class="tag">1. Demographics</span><span style="font-weight:800;font-size:14.5px;color:#0F172A;">Personal Demographics & Commute</span></div>',
             unsafe_allow_html=True,
         )
         c1, c2, c3 = st.columns(3)
-        age = c1.number_input("Age", 18, 65, int(val("Age", 35)))
+        age = c1.number_input("Employee Age (Years)", 18, 65, int(val("Age", 35)))
         gender_opts = ["Male", "Female"]
         gender = c1.selectbox("Gender", gender_opts, index=gender_opts.index(val("Gender", "Male")))
+
         mar_opts = ["Single", "Married", "Divorced"]
         marital = c2.selectbox("Marital Status", mar_opts, index=mar_opts.index(val("MaritalStatus", "Single")))
-        distance = c2.number_input("Distance From Home (Miles)", 1, 35, int(val("DistanceFromHome", 8)))
-        edu_opts = ["Life Sciences", "Medical", "Marketing", "Technical Degree", "Human Resources", "Other"]
-        edu_field = c3.selectbox("Education Field", edu_opts, index=edu_opts.index(val("EducationField", "Life Sciences")))
-        education = c3.slider("Education Level (1=Below College, 4=Master, 5=Doctor)", 1, 5, int(val("Education", 3)))
+        distance = c2.number_input("Commute Distance From Home (Miles)", 1, 35, int(val("DistanceFromHome", 8)))
 
+        edu_field_opts = ["Life Sciences", "Medical", "Marketing", "Technical Degree", "Human Resources", "Other"]
+        edu_field = c3.selectbox("Field of Education", edu_field_opts, index=edu_field_opts.index(val("EducationField", "Life Sciences")))
+        edu_opts = [
+            "1 - Below College / High School",
+            "2 - Associate Degree / College",
+            "3 - Bachelor Degree",
+            "4 - Master Degree",
+            "5 - Doctorate / PhD",
+        ]
+        edu_idx = min(max(int(val("Education", 3)) - 1, 0), 4)
+        edu_sel = c3.selectbox("Education Level", edu_opts, index=edu_idx)
+        education = int(edu_sel.split(" - ")[0])
+
+        # Section B: Role & Compensation
         st.markdown(
-            '<div style="display:flex;align-items:center;gap:8px;margin:20px 0 12px;">'
-            '<span class="tag">Section 2</span><span style="font-weight:800;font-size:15px;color:#0F172A;">Job Role, Department & Compensation</span></div>',
+            '<div style="display:flex;align-items:center;gap:8px;margin:22px 0 12px;">'
+            '<span class="tag">2. Role & Pay</span><span style="font-weight:800;font-size:14.5px;color:#0F172A;">Job Position, Department & Compensation</span></div>',
             unsafe_allow_html=True,
         )
         c4, c5, c6 = st.columns(3)
@@ -403,60 +734,90 @@ def render_predict_page():
             "Manufacturing Director", "Healthcare Representative", "Manager",
             "Sales Representative", "Research Director", "Human Resources",
         ]
-        role = c4.selectbox("Job Role", role_opts, index=role_opts.index(val("JobRole", "Sales Executive")))
+        role = c4.selectbox("Job Role / Title", role_opts, index=role_opts.index(val("JobRole", "Sales Executive")))
         dept_opts = ["Sales", "Research & Development", "Human Resources"]
         dept = c4.selectbox("Department", dept_opts, index=dept_opts.index(val("Department", "Sales")))
-        job_level = c4.slider("Job Level (1 to 5)", 1, 5, int(val("JobLevel", 2)))
+        job_level = c4.slider("Job Seniority Band (1=Junior to 5=Executive)", 1, 5, int(val("JobLevel", 2)))
 
-        income = c5.number_input("Monthly Income (USD $)", 1000, 25000, int(val("MonthlyIncome", 4800)), step=100)
-        hike = c5.number_input("Percent Salary Hike (%)", 10, 30, int(val("PercentSalaryHike", 11)))
-        stock = c5.slider("Stock Option Level (0 to 3)", 0, 3, int(val("StockOptionLevel", 0)))
+        income = c5.number_input("Monthly Salary (USD $)", 1000, 25000, int(val("MonthlyIncome", 4800)), step=100)
+        hike = c5.number_input("Annual Salary Hike (%)", 10, 30, int(val("PercentSalaryHike", 11)))
+        stock = c5.slider("Stock Option Equity Level (0=None to 3=Max)", 0, 3, int(val("StockOptionLevel", 0)))
 
         ot_opts = ["Yes", "No"]
         overtime = c6.selectbox("Works Overtime?", ot_opts, index=ot_opts.index(val("OverTime", "Yes")))
         travel_opts = ["Travel_Rarely", "Travel_Frequently", "Non-Travel"]
-        travel = c6.selectbox("Business Travel Frequency", travel_opts, index=travel_opts.index(val("BusinessTravel", "Travel_Rarely")))
-        perf = c6.slider("Performance Rating (3=Excellent, 4=Outstanding)", 3, 4, int(val("PerformanceRating", 3)))
+        travel_display = {"Travel_Rarely": "Travels Rarely", "Travel_Frequently": "Travels Frequently", "Non-Travel": "No Travel"}
+        travel = c6.selectbox("Business Travel Frequency", travel_opts, index=travel_opts.index(val("BusinessTravel", "Travel_Rarely")), format_func=lambda x: travel_display[x])
+        perf_opts = ["3 - Excellent Performance", "4 - Outstanding Performance"]
+        perf_idx = 0 if int(val("PerformanceRating", 3)) == 3 else 1
+        perf_sel = c6.selectbox("Performance Review Rating", perf_opts, index=perf_idx)
+        perf = int(perf_sel.split(" - ")[0])
 
+        # Section C: Tenure & Satisfaction
         st.markdown(
-            '<div style="display:flex;align-items:center;gap:8px;margin:20px 0 12px;">'
-            '<span class="tag">Section 3</span><span style="font-weight:800;font-size:15px;color:#0F172A;">Tenure, Satisfaction & Workplace Engagement</span></div>',
+            '<div style="display:flex;align-items:center;gap:8px;margin:22px 0 12px;">'
+            '<span class="tag">3. Engagement</span><span style="font-weight:800;font-size:14.5px;color:#0F172A;">Tenure, Satisfaction & Workplace Engagement</span></div>',
             unsafe_allow_html=True,
         )
         c7, c8, c9 = st.columns(3)
-        years_co = c7.number_input("Years at Company", 0, 40, int(val("YearsAtCompany", 4)))
+        years_co = c7.number_input("Tenure at Company (Years)", 0, 40, int(val("YearsAtCompany", 4)))
         years_role = c7.number_input("Years in Current Role", 0, 20, int(val("YearsInCurrentRole", 2)))
-        total_work = c7.number_input("Total Working Years", 0, 45, int(val("TotalWorkingYears", 8)))
+        total_work = c7.number_input("Total Career Experience (Years)", 0, 45, int(val("TotalWorkingYears", 8)))
 
         last_promo = c8.number_input("Years Since Last Promotion", 0, 20, int(val("YearsSinceLastPromotion", 2)))
         years_mgr = c8.number_input("Years With Current Manager", 0, 20, int(val("YearsWithCurrManager", 2)))
-        num_cos = c8.number_input("Number of Companies Worked", 0, 10, int(val("NumCompaniesWorked", 8)))
+        num_cos = c8.number_input("Previous Companies Worked", 0, 10, int(val("NumCompaniesWorked", 8)))
 
-        sat = c9.slider("Job Satisfaction (1=Low, 4=High)", 1, 4, int(val("JobSatisfaction", 2)))
-        env_sat = c9.slider("Environment Satisfaction (1=Low, 4=High)", 1, 4, int(val("EnvironmentSatisfaction", 2)))
-        wlb = c9.slider("Work-Life Balance (1=Bad, 4=Best)", 1, 4, int(val("WorkLifeBalance", 1)))
-        involvement = c9.slider("Job Involvement (1=Low, 4=High)", 1, 4, int(val("JobInvolvement", 3)))
-        rel_sat = c9.slider("Relationship Satisfaction (1=Low, 4=High)", 1, 4, int(val("RelationshipSatisfaction", 1)))
+        sat_opts = ["1 - Very Dissatisfied", "2 - Dissatisfied", "3 - Satisfied", "4 - Very Satisfied"]
+        sat_idx = min(max(int(val("JobSatisfaction", 2)) - 1, 0), 3)
+        sat_sel = c9.selectbox("Job Satisfaction Rating", sat_opts, index=sat_idx)
+        sat = int(sat_sel.split(" - ")[0])
 
-        submitted = st.form_submit_button("⚡ Predict Attrition Risk", use_container_width=True)
+        env_opts = ["1 - Low Satisfaction", "2 - Medium", "3 - High", "4 - Very High"]
+        env_idx = min(max(int(val("EnvironmentSatisfaction", 2)) - 1, 0), 3)
+        env_sel = c9.selectbox("Work Environment Satisfaction", env_opts, index=env_idx)
+        env_sat = int(env_sel.split(" - ")[0])
+
+        wlb_opts = ["1 - Poor (Burnout Risk)", "2 - Below Average", "3 - Good / Balanced", "4 - Excellent"]
+        wlb_idx = min(max(int(val("WorkLifeBalance", 1)) - 1, 0), 3)
+        wlb_sel = c9.selectbox("Work-Life Balance Rating", wlb_opts, index=wlb_idx)
+        wlb = int(wlb_sel.split(" - ")[0])
+
+        involve_opts = ["1 - Low", "2 - Medium", "3 - High", "4 - Very High"]
+        involve_idx = min(max(int(val("JobInvolvement", 3)) - 1, 0), 3)
+        involve_sel = c9.selectbox("Job Involvement Rating", involve_opts, index=involve_idx)
+        involvement = int(involve_sel.split(" - ")[0])
+
+        rel_opts = ["1 - Low", "2 - Medium", "3 - High", "4 - Very High"]
+        rel_idx = min(max(int(val("RelationshipSatisfaction", 1)) - 1, 0), 3)
+        rel_sel = c9.selectbox("Team Relationship Satisfaction", rel_opts, index=rel_idx)
+        rel_sat = int(rel_sel.split(" - ")[0])
+
+        training = c7.number_input("Training Sessions Attended Last Year", 0, 8, int(val("TrainingTimesLastYear", 1)))
+
+        daily_rate = int(val("DailyRate", max(100, int(income / 22 * 3.5))))
+        hourly_rate = int(val("HourlyRate", max(15, int(income / 160))))
+        monthly_rate = int(val("MonthlyRate", max(2000, int(income * 2.8))))
+
+        submitted = st.form_submit_button("⚡ Run AI Attrition Risk Prediction", use_container_width=True)
 
     current_sample = {
-        "Age": age, "BusinessTravel": travel, "DailyRate": int(val("DailyRate", 800)), "Department": dept,
+        "Age": age, "BusinessTravel": travel, "DailyRate": daily_rate, "Department": dept,
         "DistanceFromHome": distance, "Education": education, "EducationField": edu_field,
-        "EnvironmentSatisfaction": env_sat, "Gender": gender, "HourlyRate": int(val("HourlyRate", 65)),
+        "EnvironmentSatisfaction": env_sat, "Gender": gender, "HourlyRate": hourly_rate,
         "JobInvolvement": involvement, "JobLevel": job_level, "JobRole": role,
         "JobSatisfaction": sat, "MaritalStatus": marital, "MonthlyIncome": income,
-        "MonthlyRate": int(val("MonthlyRate", 15000)), "NumCompaniesWorked": num_cos, "OverTime": overtime,
+        "MonthlyRate": monthly_rate, "NumCompaniesWorked": num_cos, "OverTime": overtime,
         "PercentSalaryHike": hike, "PerformanceRating": perf,
         "RelationshipSatisfaction": rel_sat, "StockOptionLevel": stock,
-        "TotalWorkingYears": total_work, "TrainingTimesLastYear": int(val("TrainingTimesLastYear", 2)),
+        "TotalWorkingYears": total_work, "TrainingTimesLastYear": training,
         "WorkLifeBalance": wlb, "YearsAtCompany": years_co,
         "YearsInCurrentRole": years_role, "YearsSinceLastPromotion": last_promo,
         "YearsWithCurrManager": years_mgr,
     }
 
-    # Automatically compute prediction on load or on submit
-    with st.spinner("Executing calibrated SVM inference..."):
+    # 4. Execute Prediction
+    with st.spinner("Calculating calibrated SVM attrition prediction..."):
         prob = predict_probability(b, current_sample)
         st.session_state["last_sample"] = current_sample
         st.session_state["last_prob"] = prob
@@ -464,10 +825,11 @@ def render_predict_page():
     is_leaver = prob >= threshold
     tier = risk_level(prob)
     c_color = RISK[tier]
+    person_name = emp_meta["name"] if selected_emp_id != "CUSTOM" else "Assessed Employee"
 
-    st.markdown('<div class="section-label">Prediction Results & Risk Diagnosis</div>', unsafe_allow_html=True)
+    st.markdown('<div class="section-label">Step 3: Prediction Results & AI Diagnosis</div>', unsafe_allow_html=True)
 
-    # Big Verdict Banner
+    # Clean Verdict Banner
     if is_leaver:
         st.markdown(
             f"""
@@ -477,9 +839,9 @@ def render_predict_page():
                   <div style="font-size:20px;font-weight:900;color:#991B1B;">
                     🚨 PREDICTION: HIGH ATTRITION RISK (LIKELY TO LEAVE)
                   </div>
-                  <div style="font-size:13.5px;color:#7F1D1D;margin-top:4px;">
-                    This employee's predicted attrition probability of <b>{prob:.1%}</b> exceeds the optimal decision threshold (<b>{threshold:.1%}</b>).
-                    Immediate HR retention intervention is strongly recommended.
+                  <div style="font-size:13.8px;color:#7F1D1D;margin-top:4px;line-height:1.6;">
+                    <b>{person_name}</b> has a predicted attrition probability of <b>{prob:.1%}</b>, which exceeds the calibrated decision threshold (<b>{threshold:.1%}</b>).
+                    Immediate proactive retention measures are recommended to prevent turnover.
                   </div>
                 </div>
                 <div style="text-align:right;">
@@ -499,9 +861,9 @@ def render_predict_page():
                   <div style="font-size:20px;font-weight:900;color:#166534;">
                     ✅ PREDICTION: LOW ATTRITION RISK (LIKELY TO STAY)
                   </div>
-                  <div style="font-size:13.5px;color:#14532D;margin-top:4px;">
-                    This employee's predicted attrition probability of <b>{prob:.1%}</b> is safely below the decision threshold (<b>{threshold:.1%}</b>).
-                    Standard engagement and retention practices are sufficient.
+                  <div style="font-size:13.8px;color:#14532D;margin-top:4px;line-height:1.6;">
+                    <b>{person_name}</b> has a predicted attrition probability of <b>{prob:.1%}</b>, safely below the decision threshold (<b>{threshold:.1%}</b>).
+                    Employee demonstrates healthy retention indicators. Standard engagement practices are sufficient.
                   </div>
                 </div>
                 <div style="text-align:right;">
@@ -520,21 +882,21 @@ def render_predict_page():
     margin = (prob - threshold) * 100
     margin_str = f"+{margin:.1f}% Above" if margin >= 0 else f"{abs(margin):.1f}% Below"
     k_cols[2].markdown(kpi_card("Decision Margin", margin_str, "vs Decision Threshold", "⚖️", PRIMARY, "#EFF6FF"), unsafe_allow_html=True)
-    rec_text = "Intervention Urgent" if is_leaver else "Standard Engagement"
-    k_cols[3].markdown(kpi_card("Recommended Action", rec_text, "HR Protocol", "🛡️", VIOLET, "#F5F3FF"), unsafe_allow_html=True)
+    rec_text = "Intervention Urgent" if is_leaver else "Standard Monitoring"
+    k_cols[3].markdown(kpi_card("HR Action Protocol", rec_text, "Action Required", "🛡️", VIOLET, "#F5F3FF"), unsafe_allow_html=True)
 
-    # Probability Meter
+    # Probability Gauge
     st.markdown(
         f"""
         <div class="panel" style="margin-top:16px;">
           <div style="display:flex;justify-content:space-between;align-items:center;">
-            <div style="font-size:14px;font-weight:800;color:#0F172A;">Attrition Risk Probability Meter</div>
+            <div style="font-size:14px;font-weight:800;color:#0F172A;">Calibrated Probability Meter</div>
             <div style="font-size:18px;font-weight:900;color:{c_color};">{prob:.1%}</div>
           </div>
           {seg_gauge(prob, c_color)}
           <div style="display:flex;justify-content:space-between;font-size:11.5px;color:#64748B;margin-top:8px;">
             <span>0% (Strong Retention)</span>
-            <span style="color:#2563EB;font-weight:700;">▲ Optimal Threshold ({threshold:.1%})</span>
+            <span style="color:#2563EB;font-weight:700;">▲ Optimal Decision Boundary ({threshold:.1%})</span>
             <span>100% (Certain Churn)</span>
           </div>
         </div>
@@ -542,28 +904,49 @@ def render_predict_page():
         unsafe_allow_html=True,
     )
 
-    # SHAP Explainability & Recommendations Row
-    exp_col, rec_col = st.columns([1.2, 1])
+    # 5. SHAP Breakdown with Explicit Human-Friendly Names & Current Values
+    exp_col, rec_col = st.columns([1.3, 1])
 
     with exp_col:
         st.markdown(
             """
             <div class="panel">
               <div class="panel-title">Explainability: Top Drivers of This Prediction</div>
-              <div class="panel-sub">Sub-second SHAP kernel attribution showing what pushes this employee toward leaving or staying.</div>
+              <div class="panel-sub">SHAP feature attributions showing exactly which factors push toward turnover or retention:</div>
             """,
             unsafe_allow_html=True,
         )
         try:
             with st.spinner("Decomposing SHAP contributions..."):
                 factors, _ = explain_prediction(b, current_sample, top_n=6, n_samples=100)
-            names = [f[0] for f in factors]
-            vals = [f[1] for f in factors]
+
+            clean_labels = []
+            vals = []
+            table_rows = []
+
+            for raw_feature, shap_val in factors:
+                meta = FEATURE_METADATA.get(raw_feature, {})
+                display_name = meta.get("name", raw_feature)
+                icon = meta.get("icon", "🔹")
+                raw_val = current_sample.get(raw_feature, "")
+                formatted_val = meta.get("format", lambda x: str(x))(raw_val)
+
+                clean_label = f"{display_name} ({formatted_val})"
+                clean_labels.append(clean_label)
+                vals.append(shap_val)
+
+                impact_text = f"🔴 Increases Attrition (+{abs(shap_val):.1%})" if shap_val > 0 else f"🟢 Promotes Retention (-{abs(shap_val):.1%})"
+                table_rows.append({
+                    "Attribute / Factor": f"{icon} {display_name}",
+                    "Employee's Current Value": formatted_val,
+                    "Impact on Turnover": impact_text,
+                })
+
             mx = max(abs(v) for v in vals) if vals else 1.0
 
             fig_shap = go.Figure(
                 go.Bar(
-                    y=names,
+                    y=clean_labels,
                     x=vals,
                     orientation="h",
                     marker=dict(
@@ -576,19 +959,24 @@ def render_predict_page():
                     hovertemplate="%{y}: SHAP %{x:+.3f}<extra></extra>",
                 )
             )
-            fig_shap.update_xaxes(range=[-mx * 1.35, mx * 1.35], title="SHAP Attribution (Red = Increases Churn, Green = Increases Retention)")
-            fig_shap.update_layout(height=310)
+            fig_shap.update_xaxes(range=[-mx * 1.35, mx * 1.35], title="SHAP Value (Red = Pushes Toward Departure, Green = Promotes Retention)")
+            fig_shap.update_layout(height=320)
             st.plotly_chart(style_fig(fig_shap), use_container_width=True, config={"displayModeBar": False})
+
+            # Clean Table of SHAP Factors with Names & Values
+            st.markdown('<div style="font-size:13px;font-weight:700;color:#334155;margin:12px 0 6px;">Detailed Factor Breakdown:</div>', unsafe_allow_html=True)
+            st.dataframe(pd.DataFrame(table_rows), width="stretch", hide_index=True)
+
         except Exception as e:
             st.warning(f"SHAP explanation note: {e}")
         st.markdown("</div>", unsafe_allow_html=True)
 
     with rec_col:
         st.markdown(
-            """
+            f"""
             <div class="panel">
-              <div class="panel-title">Prescriptive Retention Action Plan</div>
-              <div class="panel-sub">Automated HR policy recommendations tailored to this employee's risk profile:</div>
+              <div class="panel-title">Targeted Retention Action Plan</div>
+              <div class="panel-sub">Prescriptive HR interventions tailored for <b>{person_name}</b>:</div>
               <div style="margin-top:14px;display:flex;flex-direction:column;gap:12px;">
             """,
             unsafe_allow_html=True,
@@ -596,19 +984,19 @@ def render_predict_page():
 
         recs = []
         if overtime == "Yes":
-            recs.append("<b>Workload & Overtime:</b> Employee is clocking heavy overtime (+2.3x attrition multiplier). Institute an overtime cap and redistribute project milestones.")
+            recs.append("<b>Overtime Relief:</b> Employee is working regular overtime (+2.3x attrition risk multiplier). Mandate an overtime ceiling and reallocate pressing deliverables.")
         if sat <= 2:
-            recs.append("<b>Stay Interview:</b> Job satisfaction is critically low. Schedule a confidential 1-on-1 retention interview within 7 days to address role friction.")
+            recs.append("<b>Confidential Stay Interview:</b> Job satisfaction is critically low. Schedule a 1-on-1 retention interview within 7 business days to resolve role friction.")
         if income < 4500:
-            recs.append("<b>Compensation Adjustment:</b> Monthly income is below the role median. Review market compensation benchmarks and consider an off-cycle adjustment.")
+            recs.append("<b>Compensation Review:</b> Monthly salary is below peer median. Review market compensation benchmarks and consider an off-cycle salary adjustment.")
         if wlb <= 2:
-            recs.append("<b>Work-Life Balance:</b> Employee reports strained work-life balance. Offer flexible working hours or partial remote/hybrid scheduling.")
+            recs.append("<b>Work-Life Balance Initiative:</b> Employee reports acute burnout. Introduce flexible working hours or partial hybrid remote scheduling.")
         if distance > 12:
-            recs.append("<b>Commute Relief:</b> High commute distance (>12 miles). Provide commute stipend or remote work days to reduce burnout.")
+            recs.append("<b>Commute Support:</b> Long commute distance (>12 miles). Provide a commuting stipend or 2-3 work-from-home days per week.")
         if last_promo >= 3:
-            recs.append("<b>Career Pathing:</b> Over 3 years without promotion. Formulate a transparent 6-month career advancement pathway.")
+            recs.append("<b>Promotion Review:</b> Over 3 years without promotion. Formulate a 6-month promotion readiness roadmap with clear milestones.")
         if not recs:
-            recs.append("<b>Retention Maintenance:</b> Employee exhibits healthy engagement and compensation alignment. Maintain regular quarterly check-ins.")
+            recs.append("<b>Retention Maintenance:</b> Employee exhibits healthy engagement and compensation alignment. Maintain regular quarterly milestone check-ins.")
 
         for r in recs:
             st.markdown(f'<div style="font-size:13px;line-height:1.6;color:#1E293B;padding-left:10px;border-left:3px solid #2563EB;">{r}</div>', unsafe_allow_html=True)
@@ -680,7 +1068,6 @@ def render_batch_page():
         churn_pct = n_churn / total_emp if total_emp else 0.0
         n_crit_high = scored_df["Risk_Level"].isin(["High", "Critical"]).sum()
 
-        # Estimate turnover cost ($): Average replacement cost is ~1.5x annual salary (18x monthly income)
         if "MonthlyIncome" in scored_df.columns:
             leavers = scored_df[scored_df["Attrition_Predicted"] == "Yes"]
             est_cost = (leavers["MonthlyIncome"] * 18 * 0.75).sum()
@@ -765,37 +1152,54 @@ def render_simulator_page():
             Interactive Retention Intervention Simulator
           </div>
           <div style="font-size:14.5px;color:#64748B;margin-top:4px;">
-            Simulate proactive HR retention policies on at-risk employees. Quantify the probability reduction
-            and return on investment (ROI) before executing organizational changes.
+            Select any employee from the directory and simulate targeted HR retention policies.
+            Quantify the probability reduction, tier migration, and return on investment (ROI) before executing company changes.
           </div>
         </div>
         """,
         unsafe_allow_html=True,
     )
 
-    # Base profile selection
-    sim_preset_key = st.selectbox(
-        "Select Baseline Employee Profile to Simulate Interventions:",
-        [k for k in PRESETS.keys() if PRESETS[k] is not None],
+    # 1. Base Employee Selection
+    sim_emp_id = st.selectbox(
+        "Select Employee Profile to Simulate Interventions:",
+        options=[k for k in EMPLOYEE_DIRECTORY.keys() if k != "CUSTOM"],
+        format_func=lambda k: EMPLOYEE_DIRECTORY[k]["label"],
         index=0,
     )
-    base_sample = dict(PRESETS[sim_preset_key])
+    sim_meta = EMPLOYEE_DIRECTORY[sim_emp_id]
+    base_sample = dict(sim_meta["data"])
 
     base_prob = predict_probability(b, base_sample)
     base_tier = risk_level(base_prob)
 
-    st.markdown('<div class="section-label">Simulate HR Interventions</div>', unsafe_allow_html=True)
+    # Render summary card
+    st.markdown(
+        f"""
+        <div class="emp-card">
+          <div class="emp-avatar">{sim_meta['avatar']}</div>
+          <div class="emp-info">
+            <div class="emp-name">{sim_meta['name']} <span class="emp-id-badge">{sim_meta['id']}</span></div>
+            <div class="emp-role">{sim_meta['role']} · {sim_meta['department']}</div>
+            <div class="emp-summary">{sim_meta['summary']}</div>
+          </div>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+
+    st.markdown('<div class="section-label">Simulate Proactive HR Policies</div>', unsafe_allow_html=True)
     st.markdown('<div class="panel">', unsafe_allow_html=True)
 
     sim_col1, sim_col2 = st.columns(2)
     with sim_col1:
-        st.markdown("<b>Work Hours & Flexibility:</b>", unsafe_allow_html=True)
+        st.markdown("<b>Workload & Flexibility Interventions:</b>", unsafe_allow_html=True)
         eliminate_ot = st.checkbox(
             "Eliminate Mandatory Overtime (OverTime: Yes ➔ No)",
             value=(base_sample.get("OverTime") == "Yes"),
         )
         improve_wlb = st.slider(
-            "Improve Work-Life Balance Rating",
+            "Improve Work-Life Balance Rating (1=Poor to 4=Excellent)",
             1, 4,
             max(base_sample.get("WorkLifeBalance", 1), 3),
         )
@@ -815,11 +1219,11 @@ def render_simulator_page():
             value=False,
         )
         grant_stock = st.checkbox(
-            "Grant Retention Stock Options (Stock Option Level ➔ 2)",
+            "Grant Retention Stock Option Equity (Stock Option Level ➔ 2)",
             value=False,
         )
 
-    # Apply simulated interventions to sample copy
+    # Apply simulated interventions
     sim_sample = dict(base_sample)
     if eliminate_ot:
         sim_sample["OverTime"] = "No"
@@ -841,7 +1245,7 @@ def render_simulator_page():
     st.markdown("</div>", unsafe_allow_html=True)
 
     # Comparison Cards
-    st.markdown('<div class="section-label">Intervention Impact Analysis</div>', unsafe_allow_html=True)
+    st.markdown('<div class="section-label">Simulated Impact Analysis</div>', unsafe_allow_html=True)
     res_c1, res_c2, res_c3 = st.columns(3)
 
     res_c1.markdown(
@@ -896,7 +1300,7 @@ def render_simulator_page():
         y=threshold * 100,
         line_dash="dash",
         line_color="#2563EB",
-        annotation_text=f"Decision Threshold ({threshold:.1%})",
+        annotation_text=f"Decision Boundary ({threshold:.1%})",
         annotation_position="top left",
     )
     fig_comp.update_yaxes(title="Attrition Probability (%)", range=[0, 105])
@@ -914,8 +1318,8 @@ def render_simulator_page():
         <div class="panel" style="background:#F0FDF4;border:1px solid #BBF7D0;">
           <div style="font-size:16px;font-weight:900;color:#166534;">💼 Business Case & Cost Savings Estimate</div>
           <div style="font-size:13.5px;color:#14532D;margin-top:6px;line-height:1.7;">
-            By reducing attrition probability from <b>{base_prob:.1%}</b> to <b>{sim_prob:.1%}</b>, the organization avoids an estimated
-            <b>${est_turnover_cost:,.0f}</b> turnover replacement expense for an intervention investment of approximately <b>${est_intervention_cost:,.0f}</b>.
+            By reducing {sim_meta['name']}'s turnover probability from <b>{base_prob:.1%}</b> to <b>{sim_prob:.1%}</b>, the organization avoids an estimated
+            <b>${est_turnover_cost:,.0f}</b> replacement expense for an intervention investment of approximately <b>${est_intervention_cost:,.0f}</b>.
             <br><b>Estimated Net Retention Value: +${net_savings:,.0f}</b>.
           </div>
         </div>
@@ -929,7 +1333,6 @@ def render_simulator_page():
 # ===========================================================================
 def render_eda_page():
     df = get_data()
-    b = get_bundle()
     rate = df["Attrition"].eq("Yes").mean()
 
     st.markdown(
