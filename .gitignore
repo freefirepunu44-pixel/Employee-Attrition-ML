@@ -1,6 +1,7 @@
 __pycache__/
 *.py[cod]
 .streamlit/
+!.streamlit/config.toml
 .venv/
 venv/
 .ipynb_checkpoints/
