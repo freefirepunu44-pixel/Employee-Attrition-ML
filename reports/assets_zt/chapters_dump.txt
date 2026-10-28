@@ -1,0 +1,231 @@
+P0 [Table Paragraph]: 
+P1 [Normal]: PROJECT INFORMATION & SPECIFICATIONS
+P2 [Normal]: REPORT FORMATTING SPECIFICATIONS (VTU GUIDELINES)
+P3 [Normal]: 
+P4 [Normal]: CHAPTER 1
+INTRODUCTION
+P5 [Normal]: 1.1 BACKGROUND AND MOTIVATION
+P6 [Normal]: Digital identity management is a foundational component of modern online infrastructure. Every digital interaction—accessing banking services, submitting academic certificates, seeking enterprise resource access—relies on some mechanism for asserting and validating identity. The dominant paradigm today is the perimeter-based centralized model, in which boundary firewalls and VPNs authenticate users once and implicitly trust subsequent activities. While this model has been operationally convenient, it harbours serious structural vulnerabilities that have become increasingly apparent in the context of contemporary large-scale data breaches and lateral movement attacks.
+P7 [Normal]: According to the Identity Theft Resource Center, the year 2023 alone witnessed over 2,116 data compromises affecting more than 343 million individuals globally. In corporate and institutional domains, compromised credentials have become the single leading initial attack vector, with an average dwell time of over 200 days before initial containment. Centralized single-gate security architectures represent single points of failure: once perimeter defenses are penetrated, adversaries exploit internal trust to traverse internal subnets, exfiltrate confidential databases, and execute ransomware attacks.
+P8 [Normal]: The emergence of the Zero Trust Architecture (ZTA) paradigm, formalized through NIST SP 800-207, provides an opportunity to fundamentally re-architect digital security. Zero Trust rejects implicit trust based on network topology, enforcing continuous contextual verification under the principle "Never Trust, Always Verify." Integrating Artificial Intelligence (AI) and Machine Learning (ML) enables automated multi-signal risk estimation and behavioral anomaly detection, creating adaptive security barriers capable of defending against modern credential misuse in real time.
+P9 [Normal]: AI-ZeroTrust has been conceived and developed to synthesize these advanced technologies into an authentic, production-grade security platform. The system addresses critical gaps in conventional access gateways by incorporating a 16-control verification engine, dual-AI risk regression and anomaly detection, real-time SMTP Email OTP, passwordless 128D facial biometrics, and an immutable SHA-256 cryptographic audit ledger.
+P10 [Normal]: 1.2 PROBLEM STATEMENT
+P11 [Normal]: Centralized perimeter access systems suffer from severe and well-documented structural vulnerabilities:
+P12 [Normal]: • Implicit Internal Trust: Once credentials authenticate past boundary firewalls, internal network resources remain completely unprotected against lateral traversal.
+P13 [Normal]: • Static Rule Limitations: Conventional Role-Based Access Control (RBAC) evaluates static permissions, failing to detect anomalous logins occurring at off-hours or from suspicious IP addresses.
+P14 [Normal]: • Credential Forgery & Hijacking: Password-only authentication remains vulnerable to credential stuffing, session token replay, and phishing.
+P15 [Normal]: • Absence of Cryptographic Auditability: Standard access loggers lack forward tamper-evident chaining, allowing malicious insiders to alter or delete access records without detection.
+P16 [Normal]: 
+P17 [Normal]: Table 1.1: Comparison of Access Control Paradigms vs Zero Trust
+P18 [Normal]: 1.3 OBJECTIVES
+P19 [Normal]: Phase I Objectives (Semester VI):
+P20 [Normal]: • 1. Literature Survey: Conduct a comprehensive review on NIST SP 800-207 Zero Trust, Google BeyondCorp, and dynamic risk authentication.
+P21 [Normal]: • 2. Architecture Design: Formulate the PEP/PDP decoupled architecture, telemetry feature space, and RBAC clearance model.
+P22 [Normal]: • 3. Requirements Specification: Define 18 contextual security features, cryptographic primitives, and database schemas.
+P23 [Normal]: • 4. Architectural Modeling: Construct DFD Level 0/1/2, UML Use-Case models, and verification flow diagrams.
+P24 [Normal]: • 5. Phase I Synopsis: Present the Phase I VTU Project Synopsis and obtain departmental guide approval.
+P25 [Normal]: Phase II Objectives (Semester VII):
+P26 [Normal]: • 1. Predictive ML Pipeline: Train, optimize, and deploy the RF-2026-v4 Random Forest Regressor and Isolation Forest anomaly detector.
+P27 [Normal]: • 2. Verification Engine: Build the 16-control VerificationEngine with typed provenance and confidence ratings.
+P28 [Normal]: • 3. Multi-Factor Assurance: Implement live SMTP Email OTP transmission (STARTTLS 587) and 128D facial biometric matching.
+P29 [Normal]: • 4. Cryptographic Ledger: Implement the forward-chained SHA-256 audit ledger with real-time chain verification.
+P30 [Normal]: • 5. Automated Testing: Execute complete integration test suite (63/63 passing tests) and latency benchmarks.
+P31 [Normal]: • 6. Dissertation Report: Compile the final VTU Major Project Dissertation Report and documentation.
+P32 [Normal]: 1.4 SCOPE OF THE PROJECT
+P33 [Normal]: The AI-ZeroTrust platform encompasses dynamic contextual access control, supervised and unsupervised machine learning risk scoring, automated step-up authentication, tamper-evident cryptographic logging, and administrative employee monitoring. The current prototype is validated on local and enterprise test networks. Enterprise cloud deployment across distributed Kubernetes clusters and hardware FIDO2 tokens are identified as future scope.
+P34 [Normal]: 1.5 ORGANISATION OF THE REPORT
+P35 [Normal]: The remainder of this report is organized as follows: Chapter 2 presents a survey of existing literature on access control and Zero Trust models. Chapter 3 defines the functional and non-functional requirements. Chapter 4 details the system architecture, PEP/PDP model, DFDs, and database schema. Chapter 5 formalizes the research methodology, ML algorithms, and policy rules. Chapter 6 describes implementation details across backend, frontend, biometrics, and audit ledgers. Chapter 7 presents testing strategy, results, and latency benchmarks. Chapter 8 concludes the report with future research directions.
+P36 [Normal]: 
+P37 [Normal]: CHAPTER 2
+LITERATURE SURVEY
+P38 [Normal]: 2.1 CENTRALIZED AND PERIMETER DEFENSE SYSTEMS
+P39 [Normal]: Traditional network architectures rely on border defenses such as firewalls and VPN concentrators to filter traffic entering corporate intranets. Anderson et al. [1] demonstrated that perimeter-focused security creates an artificial divide: once attackers compromise boundary credentials, they enter an unmonitored flat internal network where servers and workstations communicate freely. The 2017 Equifax breach (147 million records) and 2021 LinkedIn exposure (700 million records) empirically confirmed the catastrophic risk of single-gate centralized access.
+P40 [Normal]: 2.2 NIST ZERO TRUST ARCHITECTURE STANDARDS
+P41 [Normal]: NIST Special Publication 800-207 [2] formalized the core tenets of Zero Trust: all data sources are resources, communications are secured regardless of location, access is granted per session, and authentication/authorization are dynamic. NIST SP 1800-35 [3] provided deployment blueprints for federal and enterprise adoption, establishing the decoupling of Policy Enforcement Points (PEP) and Policy Decision Points (PDP).
+P42 [Normal]: 2.3 GOOGLE BEYONDCORP INITIATIVE
+P43 [Normal]: Google pioneered perimeterless corporate security with BeyondCorp [4], migrating all internal applications to an Access Proxy that validates user identities and managed device certificates. While BeyondCorp eliminated corporate VPNs, it relies heavily on proprietary device agents, making adoption challenging in heterogeneous environments with personal or contractor devices.
+P44 [Normal]: 2.4 MACHINE LEARNING IN DYNAMIC ACCESS CONTROL
+P45 [Normal]: Al-Daeef et al. [5] demonstrated that supervised machine learning analyzing contextual telemetry significantly outperforms static access rules. Furthermore, Liu et al. [8] proved the efficacy of Isolation Forests for identifying behavioral outliers without requiring labeled attack datasets.
+P46 [Normal]: 2.5 COMPARATIVE STUDY OF RELATED WORKS
+P47 [Normal]: Table 2.1 presents a comparative study contrasting existing foundational access control frameworks with the AI-ZeroTrust architecture.
+P48 [Normal]: Table 2.1: Comparative Study of Related Works
+P49 [Normal]: 
+P50 [Normal]: CHAPTER 3
+SYSTEM REQUIREMENTS
+P51 [Normal]: 3.1 FUNCTIONAL REQUIREMENTS
+P52 [Normal]: 3.1.1 Authentication & Enrollment Module
+P53 [Normal]: • User Registration: Allows user registration with PBKDF2-SHA256 password hashing and mandatory email verification.
+P54 [Normal]: • Live Email OTP: Generates single-use 6-digit OTP tokens delivered via SMTP (15-min TTL, 60s resend cooldown).
+P55 [Normal]: • Facial Enrollment: Captures 128D facial feature vectors, encrypts them via Fernet AES-128, and binds them to the user record.
+P56 [Normal]: 3.1.2 Telemetry & Context Verification Module
+P57 [Normal]: • 18 Signals: Harvests hardware, environmental, network, and temporal telemetry on every request.
+P58 [Normal]: • 16 Controls: Executes 16 structured checks returning status, confidence rating, and limitation provenance.
+P59 [Normal]: 3.1.3 Policy Enforcement & Decision Module
+P60 [Normal]: • Dual-AI Engine: Computes continuous risk scores (0–100) and detects behavioral outlier drift.
+P61 [Normal]: • Dynamic Policies: Enforces policies ZT-POL-001 through 005 returning ALLOW, STEP_UP_AUTHENTICATION, DENY, or BLOCK.
+P62 [Normal]: 3.1.4 Audit & Administration Module
+P63 [Normal]: • SHA-256 Ledger: Commits all access decisions to an immutable forward-chained cryptographic ledger.
+P64 [Normal]: • Session Revocation: Empowers Level-4 Security Officers to terminate sessions in 1-click via token_blocklist.
+P65 [Normal]: 3.2 NON-FUNCTIONAL REQUIREMENTS
+P66 [Normal]: • Performance: Full policy evaluation executes under 350 ms (~249 ms average).
+P67 [Normal]: • Security: Zero plaintext password or biometric storage; all tokens stored in memory.
+P68 [Normal]: • Tamper Resistance: Historical log alterations break the forward SHA-256 chain, triggering automated alert detection.
+P69 [Normal]: 
+P70 [Normal]: 3.3 HARDWARE REQUIREMENTS
+P71 [Normal]: Table 3.1: Hardware Requirements Specification
+P72 [Normal]: 3.4 SOFTWARE REQUIREMENTS
+P73 [Normal]: Table 3.2: Software Requirements Specification
+P74 [Normal]: 
+P75 [Normal]: CHAPTER 4
+SYSTEM DESIGN AND ARCHITECTURE
+P76 [Normal]: 4.1 HIGH-LEVEL ARCHITECTURE
+P77 [Normal]: The AI-ZeroTrust platform is architected around four decoupled layers adhering to NIST SP 800-207:
+P78 [Normal]: • 1. Client & Telemetry Harvester: Browser-based ES6 modules capturing 18 parameters without third-party frameworks.
+P79 [Normal]: • 2. Policy Enforcement Point (PEP): Flask REST gateway intercepting all inbound requests, applying rate limiting and CSRF defense.
+P80 [Normal]: • 3. Policy Decision Point (PDP): Dual-AI analytical engine computing continuous risk scores and rendering policy verdicts.
+P81 [Normal]: • 4. Cryptographic Storage Layer: SQLite WAL database storing encrypted biometrics and the forward-chained SHA-256 audit ledger.
+P82 [Normal]: 
+P83 [Normal]: Figure 4.1: End-to-End Zero Trust System Architecture (PEP & PDP)
+P84 [Normal]: 
+P85 [Normal]: 4.2 INTERACTION MODEL & DATA FLOW
+P86 [Normal]: Figure 4.2 outlines the end-to-end continuous authentication and verification sequence across the decoupled subsystems:
+P87 [Normal]: • Step 1: Inbound Request: Client submits access request with 18-parameter telemetry vector.
+P88 [Normal]: • Step 2: PEP Ingestion: PEP applies sliding-window rate checks and anti-CSRF token validation.
+P89 [Normal]: • Step 3: Verification Pipeline: VerificationEngine executes 16 controls, generating confidence ratings.
+P90 [Normal]: • Step 4: AI Inference: Random Forest computes base risk score; Isolation Forest checks for anomaly drift.
+P91 [Normal]: • Step 5: Policy Evaluation: Dynamic rules (ZT-POL-001..005) render binding verdict: ALLOW, STEP-UP, DENY, or BLOCK.
+P92 [Normal]: • Step 6: Cryptographic Logging: Event is hashed with predecessor digest and committed to SHA-256 audit ledger.
+P93 [Normal]: 
+P94 [Normal]: Figure 4.2: Continuous Authentication: Ingress & Verification Sequence
+P95 [Normal]: 
+P96 [Normal]: 4.3 DATA FLOW ARCHITECTURE (DFD LEVEL 0 & LEVEL 1)
+P97 [Normal]: The functional data flow of the AI-ZeroTrust architecture is modeled through Level 0 Context Diagram (Figure 4.3) and Level 1 System Decomposition (Figure 4.4).
+P98 [Normal]: 
+P99 [Normal]: Figure 4.3: Data Flow Diagram – Level 0 (Context Diagram)
+P100 [Normal]: 
+P101 [Normal]: Figure 4.4: Data Flow Diagram – Level 1 (System Decomposition)
+P102 [Normal]: 4.4 DATABASE SCHEMA DESIGN
+P103 [Normal]: Table 4.1 summarizes the relational database schema implemented in SQLite WAL mode.
+P104 [Normal]: Table 4.1: Database Schema Summary (Core Tables)
+P105 [Normal]: 
+P106 [Normal]: CHAPTER 5
+METHODOLOGY / SYSTEM DESIGN
+P107 [Normal]: 5.1 16-CONTROL VERIFICATION ENGINE
+P108 [Normal]: Before machine learning evaluation occurs, the inbound request is processed through the VerificationEngine (ztrust/services/verification.py). The engine executes exactly 16 structured checks, each returning a strongly-typed VerificationCheck object with explicit status, confidence score, source provenance, and limitations.
+P109 [Normal]: • Identity & Email Verification: Validates JWT signature, active account state, and confirmed email record in database.
+P110 [Normal]: • MFA Status: Validates enrolled facial vector, email OTP, or TOTP secrets.
+P111 [Normal]: • Device & Browser Posture: Evaluates hardware attributes, user-agent integrity, and headless browser flags.
+P112 [Normal]: • Geographic & Velocity Checks: Calculates physical travel speed between consecutive logins to detect impossible travel.
+P113 [Normal]: • Transport & Session Encryption: Validates TLS transport, secure HttpOnly cookie flags, and active token blocklist state.
+P114 [Normal]: 
+P115 [Normal]: Figure 5.1: 16-Control Verification Pipeline Lifecycle (Ingress to PDP)
+P116 [Normal]: 5.2 DUAL-AI RISK SCORING ARCHITECTURE
+P117 [Normal]: The platform couples supervised regression with unsupervised anomaly isolation:
+P118 [Normal]: • Random Forest Regressor (RF-2026-v4): Trained on 10,000 samples with 100+ depth-capped trees to predict continuous 0–100 risk scores.
+P119 [Normal]: • Isolation Forest Detector: Unsupervised model (contamination=0.05) measuring structural divergence from baseline behavior; applies +15 penalty upon detecting anomalies.
+P120 [Normal]: 
+P121 [Normal]: Figure 5.2: Dual-AI Risk Assessment and Anomaly Scoring Workflow
+P122 [Normal]: 5.3 MULTI-DETECTOR ANOMALY SCORING & TRUST RADAR
+P123 [Normal]: To provide deep multi-dimensional behavioral insight, the system maps telemetry anomalies onto a multi-detector Trust Radar matrix (Figure 5.3), comparing normal user baselines against anomalous adversary activity.
+P124 [Normal]: 
+P125 [Normal]: Figure 5.3: Multi-Detector AI Anomaly and Trust Radar Pipeline
+P126 [Normal]: 
+P127 [Normal]: 5.4 DYNAMIC POLICY ENGINE DECISION MATRIX
+P128 [Normal]: Table 5.2 outlines the 5 dynamic database-backed policy rules enforced by the Policy Decision Point.
+P129 [Normal]: Table 5.2: Dynamic Policy Rule Decision Matrix (ZT-POL-001 to 005)
+P130 [Normal]: 5.5 FORWARD-CHAINED SHA-256 AUDIT LEDGER
+P131 [Normal]: Every access event is committed to an immutable forward-chained cryptographic ledger. Each log digest is computed recursively:
+P132 [Normal]: H_i = SHA-256( Event_ID || Timestamp || User_ID || Action || Result || H_{i-1} )
+P133 [Normal]: Where H_{i-1} represents the hash digest of the immediate predecessor. Any retroactive modification breaks the chain from that block forward, enabling automated tampering detection.
+P134 [Normal]: 
+P135 [Normal]: CHAPTER 6
+IMPLEMENTATION
+P136 [Normal]: 6.1 TECHNOLOGY STACK MATRIX
+P137 [Normal]: Table 6.1 presents the complete technology stack powering the platform.
+P138 [Normal]: Table 6.1: Full Technology Stack Matrix
+P139 [Normal]: 6.2 REST API SPECIFICATIONS
+P140 [Normal]: Table 6.2 outlines the core REST API endpoints exposed by the Flask gateway.
+P141 [Normal]: Table 6.2: REST API Endpoint Specifications (8 Core Endpoints)
+P142 [Normal]: 
+P143 [Normal]: Figure 6.1: Authentication & Access State Machine (Lifecycle)
+P144 [Normal]: 6.3 RBAC PERMISSIONS & ENFORCEMENT MATRIX
+P145 [Normal]: Table 6.3 details the Role-Based Access Control permissions enforced across operator and security officer tiers, while Figure 6.2 illustrates the real-time policy evaluation decision tree.
+P146 [Normal]: Table 6.3: RBAC Permissions & Clearance Matrix
+P147 [Normal]: 
+P148 [Normal]: Figure 6.2: Policy Enforcement Decision Flow (PEP/PDP)
+P149 [Normal]: 
+P150 [Normal]: CHAPTER 7
+TESTING AND RESULTS
+P151 [Normal]: 7.1 UNIT AND INTEGRATION TESTING
+P152 [Normal]: The platform was evaluated using an automated test runner (tests/run_all_tests.py) comprising 63 unit and integration tests across 11 distinct test modules. Table 7.1 details the test results recorded in reports/test_results.json, and Figure 7.1 visually plots the distribution of automated passing test cases across each subsystem module.
+P153 [Normal]: Table 7.1: Complete Integration Test Suite Summary (11 Modules, 63 Tests)
+P154 [Normal]: 
+P155 [Normal]: Figure 7.1: Automated Integration Test Suite Coverage across 11 Modules (Synthetic representation of Table 7.1 data)
+P156 [Normal]: 7.2 PERFORMANCE BENCHMARKS
+P157 [Normal]: System execution latencies were benchmarked across all critical verification components (reports/performance_report.json). Table 7.2 presents the measured timings, and Figure 7.2 presents a comparative horizontal bar visualization contrasting measured latencies against engineering service-level targets.
+P158 [Normal]: Table 7.2: Performance Benchmark Results & Decision Latencies
+P159 [Normal]: 
+P160 [Normal]: Figure 7.2: Performance Benchmark Results & Decision Latency Comparison vs Targets (Synthetic representation of Table 7.2 data)
+P161 [Normal]: 7.3 PROJECT IMPLEMENTATION ROADMAP
+P162 [Normal]: Table 7.3 presents the phased implementation milestones achieved throughout project execution.
+P163 [Normal]: Table 7.3: Project Implementation Phase Roadmap
+P164 [Normal]: 
+P165 [Normal]: CHAPTER 8
+CONCLUSION AND FUTURE SCOPE
+P166 [Normal]: 8.1 CONCLUSION
+P167 [Normal]: This project has successfully designed, implemented, and validated AI-ZeroTrust, an enterprise-grade continuous identity and context verification platform that resolves fundamental vulnerabilities inherent to conventional perimeter access models. The platform demonstrates that the synthesis of NIST SP 800-207 Zero Trust Architecture, supervised Random Forest regression, unsupervised Isolation Forest anomaly detection, live multi-factor assurance, and forward-chained SHA-256 audit ledgers can be achieved within a unified, high-performance software system suitable for academic and industrial deployment.
+P168 [Normal]: Key achievements of this work include: sub-250ms policy evaluation latency, an empirical ML R² score of 0.9849 (MAE 2.16), 100% pass rate across 63 automated integration tests, live SMTP Email OTP transmission, passwordless 128D facial biometric authentication with Haar-Cascade liveness anti-spoofing, and non-repudiable cryptographic audit logging.
+P169 [Normal]: 8.2 FUTURE SCOPE
+P170 [Normal]: • FIDO2 / WebAuthn Hardware Keys: Integrate physical cryptographic USB security keys (YubiKey) for physical phishing-resistant authentication.
+P171 [Normal]: • Reinforcement Learning (Contextual Bandits): Deploy self-tuning Reinforcement Learning algorithms to dynamically recalibrate policy risk thresholds based on evolving threat patterns.
+P172 [Normal]: • OS Kernel eBPF Probes: Deploy lightweight Linux eBPF probes to capture kernel-level socket connections and process telemetry directly at the OS layer.
+P173 [Normal]: • Commercial Threat Intelligence Feeds: Integrate live commercial threat intelligence feeds (AbuseIPDB, MaxMind GeoIP2) to replace simulated reputation checks.
+P174 [Normal]: 
+P175 [Normal]: REFERENCES
+P176 [Normal]: 1. R. Anderson, C. Barton, R. Böhme, J. Clayton, M. J. G. van Eeten, M. Levi, T. Moore, and S. Savage, “Measuring the cost of cybercrime,” in The Economics of Information Security and Privacy, R. Böhme, Ed. Berlin, Germany: Springer, 2013, pp. 265–300.
+P177 [Normal]: 2. S. Rose, O. Borchert, S. Mitchell, and S. Connelly, “Zero Trust Architecture,” National Institute of Standards and Technology (NIST), Gaithersburg, MD, USA, NIST Special Publication 800-207, Aug. 2020. DOI: 10.6028/NIST.SP.800-207.
+P178 [Normal]: 3. A. Barker et al., “Implementing a Zero Trust Architecture,” National Institute of Standards and Technology (NIST), Gaithersburg, MD, USA, NIST Special Publication 1800-35, Oct. 2022.
+P179 [Normal]: 4. R. Ward and B. Beyer, “BeyondCorp: A New Approach to Enterprise Security,” ;login: The USENIX Magazine, vol. 39, no. 6, pp. 6–11, Dec. 2014.
+P180 [Normal]: 5. M. A. Al-Daeef, N. Basir, and M. T. Saudi, “Risk-Based Continuous Authentication Using Machine Learning in Zero Trust Environments,” IEEE Access, vol. 10, pp. 112450–112465, 2022. DOI: 10.1109/ACCESS.2022.3216843.
+P181 [Normal]: 6. D. Temoshok et al., “Digital Identity Guidelines: Authentication and Lifecycle Management,” National Institute of Standards and Technology (NIST), Gaithersburg, MD, USA, NIST Special Publication 800-63B, Feb. 2025.
+P182 [Normal]: 7. L. Breiman, “Random Forests,” Machine Learning, vol. 45, no. 1, pp. 5–32, Oct. 2001. DOI: 10.1023/A:1010933404324.
+P183 [Normal]: 8. F. T. Liu, K. M. Ting, and Z.-H. Zhou, “Isolation Forest,” in Proc. Eighth IEEE International Conference on Data Mining (ICDM), Pisa, Italy, 2008, pp. 413–422. DOI: 10.1109/ICDM.2008.17.
+P184 [Normal]: 9. OWASP Foundation, “OWASP Top 10: 2025 - The Ten Most Critical Web Application Security Risks,” Open Web Application Security Project, Jan. 2025. [Online]. Available: https://owasp.org/Top10/.
+P185 [Normal]: 10. IBM Security, “Cost of a Data Breach Report 2024,” IBM Corporation, Armonk, NY, USA, Tech. Rep., Jul. 2024.
+P186 [Normal]: 11. E. G. Weyl, P. Ohlhaver, and V. Buterin, “Decentralized Society: Finding Web3's Soul,” SSRN Electronic Journal, May 2022.
+P187 [Normal]: 12. D. Boneh, J. Drake, B. Fisch, and A. Gabizon, “Halo: Recursive Proof Composition without a Trusted Setup,” Cryptology ePrint Archive, Report 2019/1021, 2019.
+P188 [Normal]: 13. K. Rannenberg, J. Camenisch, and A. Sabouri, Eds., Attribute-Based Credentials for Trust: Identity in the Information Society. Cham: Springer, 2015.
+P189 [Normal]: 14. N. Fotiou, V. A. Siris, G. C. Polyzos, Y. Kortesniemi, and D. Lagutin, “Capabilities-Based Access Control for IoT Devices Using Verifiable Credentials,” in 2020 IEEE Symposium on Security and Privacy Workshops (SPW), 2020, pp. 23–28.
+P190 [Normal]: 
+P191 [Normal]: APPENDIX A
+SNAPSHOTS
+P192 [Normal]: The following screenshots illustrate the key screens and outputs of the AI-ZeroTrust system:
+P193 [Normal]: • Snapshot 1: Login Portal — Username/Password entry with CSRF token protection and rate-limiting display.
+P194 [Normal]: • Snapshot 2: Email OTP Verification Screen — 6-digit single-use OTP input interface with 15-minute countdown.
+P195 [Normal]: • Snapshot 3: Facial Biometric Enrollment — OpenCV Haar-Cascade webcam capture with liveness frame overlay.
+P196 [Normal]: • Snapshot 4: Context Verification Dashboard — Real-time display of 16 verification controls and confidence ratings.
+P197 [Normal]: • Snapshot 5: Risk Score Output — Random Forest Regressor score (0-100) and Isolation Forest anomaly flag.
+P198 [Normal]: • Snapshot 6: Policy Decision Display — ALLOW / STEP_UP_AUTHENTICATION / DENY / BLOCK verdict rendering.
+P199 [Normal]: • Snapshot 7: SHA-256 Audit Ledger View — Forward-chained log entries with cryptographic hash signatures.
+P200 [Normal]: • Snapshot 8: Officer Console — Employee monitoring dashboard with 1-click session termination capability.
+P201 [Normal]: • Snapshot 9: Chain Integrity Verification — Real-time cryptographic ledger validation result (100% intact).
+P202 [Normal]: • Snapshot 10: Automated Test Run — Terminal output showing 63/63 integration tests passed (100% success rate).
+P203 [Normal]: 
+P204 [Normal]: APPENDIX B
+SOURCE CODE DIRECTORY STRUCTURE
+P205 [Normal]: The repository structure for the AI-ZeroTrust architecture is organized as follows:
+P206 [Normal]: AI-ZeroTrust-System/
+P207 [Normal]: ├── app.py                     # Main Flask REST Application & PEP Gateway
+P208 [Normal]: ├── ztrust/                    # Core Architecture Package
+P209 [Normal]: │   ├── services/              # Engine Services (16 Controls, Verification, Face, OTP, Ledger)
+P210 [Normal]: │   │   ├── verification.py    # 16-Control Verification Pipeline
+P211 [Normal]: │   │   ├── ai_model.py        # RF-2026-v4 Regressor & Isolation Forest Models
+P212 [Normal]: │   │   ├── audit.py           # Immutable Forward-Chained SHA-256 Audit Ledger
+P213 [Normal]: │   │   ├── face_mfa.py        # OpenCV Haar-Cascade & 128D Cosine Facial Biometrics
+P214 [Normal]: │   │   └── email_service.py   # Real-Time SMTP Email OTP Transmission Engine
+P215 [Normal]: │   ├── models/                # Relational Schema Models & PBKDF2 Crypto Primitives
+P216 [Normal]: │   └── config.py              # Environment Configuration & Security Keys
+P217 [Normal]: ├── templates/                 # Glassmorphic Web Console & Telemetry Harvester UI
+P218 [Normal]: ├── static/                    # Frontend Telemetry Harvester Scripts & Stylesheets
+P219 [Normal]: ├── tests/                     # 11 Test Suites (63 Automated Integration Tests)
+P220 [Normal]: └── reports/                   # Performance Benchmarks & Automated Audit Reports

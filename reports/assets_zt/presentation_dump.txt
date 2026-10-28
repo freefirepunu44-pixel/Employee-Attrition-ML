@@ -1,0 +1,271 @@
+SLIDE 1:
+  [TextBox 3]: VISVESVARAYA TECHNOLOGICAL UNIVERSITY
+  [TextBox 4]: Jnana Sangama, Belgaum -590014, Karnataka State, India
+  [TextBox 5]: DEPARTMENT OF CSE(IoT & CyS Incl. BCT)
+  [TextBox 6]: EAST WEST INSTITUTE OF TECHNOLOGY
+  [TextBox 7]: Off Magadi Main Road, Bengaluru, Karnataka — 560 091
+  [TextBox 9]: MAJOR PROJECT
+  [TextBox 10]: AI-BASED ZERO TRUST ARCHITECTURE
+  [TextBox 11]: Presented By:
+  [TextBox 12]: ANUSHA H G : 1EW23IC006
+CHARAN M S : 1EW23IC012
+NITHIN GOWDA R : 1EW23IC031
+PUNARVA D N : 1EW23IC037
+  [TextBox 13]: Under the Guidance of:
+  [TextBox 14]: Dr. VENKATESHA G
+PROFESSOR & HOD
+CSE(IoT & CyS Incl. BCT)
+EWIT
+  [TextBox 15]: DATE OF REVIEW
+  [TextBox 16]: 1 / 13
+---
+SLIDE 2:
+  [Rounded Rectangle 1]: 01
+  [TextBox 2]: Introduction / Background
+Core principles of continuous verification and threat landscape
+  [TextBox 4]: AI-BASED ZERO TRUST ARCHITECTURE  •  MAJOR PROJECT REVIEW
+  [TextBox 5]: 2
+  [Rounded Rectangle 6]: The Shifting Security Paradigm
+• The Traditional Blindspot: Traditional enterprise networks rely on perimeter firewalls. Once an adversary compromises a VPN credential or Wi-Fi key, they move laterally across internal subnets and databases with zero continuous verification.
+• The Zero Trust Mandate: NIST SP 800-207 establishes: "Never Trust, Always Verify." Implicit trust based on network location is eliminated; every access request is continuously evaluated against identity, endpoint posture, and real-time risk.
+• Why Machine Learning is Critical: Static firewall rules cannot adapt dynamically to subtle behavioral drift, credential stuffing, or impossible travel velocities. Machine learning models score risk and anomalies in real time per request.
+  [Rounded Rectangle 7]: 1. Identity Assurance
+PBKDF2-SHA256 password hashing (260k rounds), live SMTP Email OTP verification, and passwordless 128D facial biometrics.
+  [Rounded Rectangle 8]: 2. 16-Control Engine
+Structured pipeline extracting 18 contextual security signals (device, IP reputation, impossible travel, VPN/Tor, off-hours) with typed provenance.
+  [Rounded Rectangle 9]: 3. Dual-AI Risk Scoring
+Tuned Random Forest Regressor (0–100 risk score) paired with Isolation Forest behavioral anomaly detection (+15 penalty).
+  [Rounded Rectangle 10]: 4. Dynamic Policy Engine
+Evaluates 5 database-backed rules (ALLOW, STEP-UP, DENY, BLOCK) with forward SHA-256 chained audit logs.
+  [Rounded Rectangle 11]: Inbound Access Request   →   16 Controls Extracted   →   Dual-AI Risk Evaluated   →   Dynamic Policy Enforced   →   SHA-256 Audit Logged
+---
+SLIDE 3:
+  [Rounded Rectangle 1]: 02
+  [TextBox 2]: Literature Review / Related Work
+Analysis of existing security architectures and identified research gaps
+  [TextBox 4]: AI-BASED ZERO TRUST ARCHITECTURE  •  MAJOR PROJECT REVIEW
+  [TextBox 5]: 3
+  [Rounded Rectangle 7]: • PROJECT GAP ADDRESSED: Existing access control models either remain theoretical (NIST) or rely on rigid static rules (BeyondCorp). Our system unifies a 16-control pipeline, dual-AI risk prediction, live Email OTP, and forward SHA-256 audit logs into an accessible, sub-second continuous security platform.
+---
+SLIDE 4:
+  [Rounded Rectangle 1]: 03
+  [TextBox 2]: Problem Statement & Motivation
+The fatal vulnerabilities of perimeter defenses and enterprise impact
+  [TextBox 4]: AI-BASED ZERO TRUST ARCHITECTURE  •  MAJOR PROJECT REVIEW
+  [TextBox 5]: 4
+  [Rounded Rectangle 6]: “Traditional network security implicitly trusts entities inside the firewall, leaving enterprise infrastructure defenseless against credential stuffing, lateral movement, and insider threats.”
+  [Rounded Rectangle 7]: 1
+Lateral Movement Risk
+Once boundary VPN credentials or Wi-Fi keys are compromised, adversaries navigate freely across corporate subnets and sensitive database clusters without continuous verification.
+  [Rounded Rectangle 8]: 2
+Static & Rigid RBAC
+Traditional access control lists cannot adapt dynamically to anomalous login hours, impossible travel velocities, or device health degradation, missing active session hijacks.
+  [Rounded Rectangle 9]: 3
+Breach Cost & Dwell Time
+Global average data breach cost reached $4.45M (IBM 2024), with stolen credentials taking an average of 207 days to detect before containment across enterprise environments.
+---
+SLIDE 5:
+  [Rounded Rectangle 1]: 04
+  [TextBox 2]: Objectives & Scope
+Concrete measurable targets and defined project boundaries
+  [TextBox 4]: AI-BASED ZERO TRUST ARCHITECTURE  •  MAJOR PROJECT REVIEW
+  [TextBox 5]: 5
+  [Rounded Rectangle 6]: 01
+Extract
+16-control pipeline extracting 18 contextual security features
+  [Rounded Rectangle 7]: 02
+Predict
+Dual-AI ML risk scoring (Random Forest Regressor + Isolation Forest)
+  [Rounded Rectangle 8]: 03
+Decide
+Dynamic Policy Engine enforcing 5 DB rules (ALLOW, STEP-UP, DENY, BLOCK)
+  [Rounded Rectangle 9]: 04
+Verify
+Real-time SMTP Email OTP delivery & passwordless 128D facial biometrics
+  [Rounded Rectangle 10]: 05
+Audit
+Forward-chained SHA-256 tamper-evident chronological ledger with live UI verify
+  [Rounded Rectangle 11]: • IN SCOPE: Full web gateway • 16 verification controls • 18 ML features • Random Forest (0–100 score) • Isolation Forest anomaly filter • Dual-persona RBAC • Live Email OTP & facial biometrics • SHA-256 audit chaining
+  [Rounded Rectangle 12]: • DEVELOPMENT SCOPE & HONEST BOUNDARIES: The prototype model is trained on a 10,000-sample synthetic dataset; IP reputation uses deterministic simulation (no commercial paid API keys configured); production deployment requires live corporate network logs and TLS reverse proxy.
+---
+SLIDE 6:
+  [Rounded Rectangle 1]: 05
+  [TextBox 2]: Proposed Methodology / System Design
+High-level multi-layered Zero Trust Architecture (NIST SP 800-207 Compliant)
+  [TextBox 4]: AI-BASED ZERO TRUST ARCHITECTURE  •  MAJOR PROJECT REVIEW
+  [TextBox 5]: 6
+  [Rounded Rectangle 6]: 1. USER & TELEMETRY LAYER
+Operator Workstation  •  Security Officer Console  •  Vanilla ES6 Client (Memory Tokens)  •  Device Fingerprint  •  Webcam Biometrics
+  [Rounded Rectangle 7]: 2. POLICY ENFORCEMENT POINT (PEP)
+Security Gateway  •  Sliding-Window IP Rate Limiter  •  Anti-CSRF Middleware  •  Input Sanitizer  •  Token Revocation Blocklist
+  [Rounded Rectangle 8]: 3. POLICY DECISION POINT (PDP)
+16-Control Engine (ztrust)  •  Random Forest (RF-2026-v4)  •  Isolation Forest Anomaly Filter  •  Dynamic DB Policies (ZT-POL-001..005)
+  [Rounded Rectangle 9]: 4. DATA & ASSURANCE LAYER
+PBKDF2-SHA256 Credentials  •  Live SMTP Email OTP  •  Fernet AES-128 Face Vault  •  SQLite WAL  •  Forward SHA-256 Chained Ledger
+---
+SLIDE 7:
+  [Rounded Rectangle 1]: 05
+  [TextBox 2]: Proposed Methodology / Workflow
+Client verification flow and security officer governance journeys
+  [TextBox 4]: AI-BASED ZERO TRUST ARCHITECTURE  •  MAJOR PROJECT REVIEW
+  [TextBox 5]: 7
+  [TextBox 6]: CLIENT ACCESS VERIFICATION JOURNEY
+  [Rounded Rectangle 7]: • 1. Request Submission: User submits credentials; browser extracts device fingerprint and hardware attributes.
+  [Rounded Rectangle 8]: • 2. Gateway Interception: PEP checks rate limits, validates anti-CSRF token, and enforces input sanitization.
+  [Rounded Rectangle 9]: • 3. 16-Control Evaluation: Engine runs 16 checks (IP reputation, velocity, VPN/Tor, off-hours); missing signals reported honestly.
+  [Rounded Rectangle 10]: • 4. Dual-AI Risk Scoring: Random Forest calculates 0–100 risk score; Isolation Forest detects behavioral anomaly outliers.
+  [Rounded Rectangle 11]: • 5. Dynamic Enforcement: ALLOW unlocks enclaves, STEP_UP requires Email OTP / face biometrics, DENY / BLOCK isolates access.
+  [TextBox 12]: SECURITY OFFICER GOVERNANCE JOURNEY
+  [Rounded Rectangle 13]: • 1. Employee Monitoring: Level-4 Security Officer inspects all registered accounts, statuses, and login counts live.
+  [Rounded Rectangle 14]: • 2. Audit Log Inspection: Expands chronological access records, IP addresses, locations, risk scores, and verdicts.
+  [Rounded Rectangle 15]: • 3. Instant Quarantine: Terminates suspicious sessions with one click, revoking JWTs via token_blocklist and deactivating account.
+  [Rounded Rectangle 16]: • 4. Account Reactivation: Restores legitimate operator accounts once security inquiries or credentials conclude.
+  [Rounded Rectangle 17]: • 5. Chain Verification: Invokes live cryptographic audit check to verify 100% of forward SHA-256 log record integrity.
+---
+SLIDE 8:
+  [Rounded Rectangle 1]: 06
+  [TextBox 2]: Tools, Technologies & Implementation
+Technology stack and core frameworks implemented across the Zero Trust architecture
+  [TextBox 4]: AI-BASED ZERO TRUST ARCHITECTURE  •  MAJOR PROJECT REVIEW
+  [TextBox 5]: 8
+  [Rounded Rectangle 6]: Backend & Security Gateway
+• Core Language: Python 3.14 with strict type hinting and modular architecture
+• Web Framework: Flask 3.0 REST API microservices architecture
+• Security Middleware: Sliding-window IP rate limiter & anti-CSRF token guard
+• Architecture: Strictly decoupled PEP (Enforcement) and PDP (Decision) endpoints
+  [Rounded Rectangle 7]: Machine Learning & AI Engine
+• Supervised Model: Random Forest Regressor (model RF-2026-v4, 18 features, depth-capped 18–24)
+• Anomaly Detection: Isolation Forest (unsupervised outlier boost: adds +15 risk penalty)
+• Runtime & XAI: Scikit-Learn 1.5 & Joblib in-memory inference with top-5 feature attributions
+• Model Accuracy: Held-out test set: R² = 0.9849, MAE = 2.1588, RMSE = 2.9394
+  [Rounded Rectangle 8]: Client Telemetry & Biometrics
+• Frontend Client: Vanilla ES6 Modular JavaScript (Zero external third-party bloat; memory tokens)
+• 16 Controls: Structured pipeline returning typed provenance (verified, failed, warning, simulated)
+• Biometrics Capture: HTML5 MediaDevices & Canvas API for real-time webcam video stream
+• Face Verification: 128D geometric vector cosine similarity with OpenCV Haar-Cascade liveness detection
+  [Rounded Rectangle 9]: Database, Auth & Cryptography
+• Primary Database: SQLite with Write-Ahead Logging (WAL Mode) & strict foreign key enforcement
+• Credential Security: PBKDF2-SHA256 password hashing & live SMTP Email OTP (STARTTLS port 587)
+• Biometric Vault: Fernet AES-128-CBC encrypted template storage with zero plaintext retention
+• Audit Integrity: Forward-chained SHA-256 tamper-evident chronological ledger with live UI verify
+  [Rounded Rectangle 10]: Measured Performance: Full Policy Evaluation ~249ms  |  Random Forest Predict ~303ms  |  Audit Log Query ~7.7ms  |  Model Accuracy: R² = 0.9849, MAE = 2.16
+---
+SLIDE 9:
+  [Rounded Rectangle 1]: 07
+  [TextBox 2]: Results & Discussion
+Current implementation progress — working prototype & model benchmarks
+  [TextBox 4]: AI-BASED ZERO TRUST ARCHITECTURE  •  MAJOR PROJECT REVIEW
+  [TextBox 5]: 9
+  [TextBox 7]: Authentication Gateway • Email OTP Delivery & Passwordless Face MFA
+  [TextBox 9]: Command Center • Continuous Risk Analytics & Enclave Access
+  [TextBox 11]: Audit Access Logs • SHA-256 Forward-Chained Ledger
+  [TextBox 13]: Security Officer Console • Employee Monitoring & Session Termination
+  [Rounded Rectangle 14]: Key Experimental Results
+• Quantitative Accuracy: Random Forest Regressor achieves R² = 0.9849, Mean Absolute Error of 2.16 points, and RMSE of 2.94 on 2,000 held-out validation samples.
+• Measured Latencies: Full policy evaluation executes in ~249ms (median 236ms), with SQLite audit log queries completing in ~7.7ms under single-process WSGI.
+• Administrative Governance: Security officers can quarantine sessions instantly via token_blocklist and mathematically verify 100% of audit logs in real time.
+---
+SLIDE 10:
+  [Rounded Rectangle 1]: 08
+  [TextBox 2]: Testing & Validation
+Verification of core security flows, ML accuracy, and penetration testing
+  [TextBox 4]: AI-BASED ZERO TRUST ARCHITECTURE  •  MAJOR PROJECT REVIEW
+  [TextBox 5]: 10
+  [Rounded Rectangle 6]: 01
+Authentication & Identity
+PBKDF2-SHA256 password hashing, SMTP Email OTP hashing/TTL/cooldown, and facial liveness anti-spoofing (test_email_verification.py, test_face_mfa.py).
+  [Rounded Rectangle 7]: 02
+Telemetry & AI Engine
+16-control pipeline completeness, 18-feature Random Forest prediction, Isolation Forest anomaly scoring, and input sanitization (test_verification.py, test_ai_model.py).
+  [Rounded Rectangle 8]: 03
+Access Control & RBAC
+Enforcement of 5 dynamic policies (ZT-POL-001..005), Level-4 Admin vs Level-2 Employee role isolation, and session termination (test_policy_engine.py, test_rbac.py).
+  [Rounded Rectangle 9]: 04
+Automated Test Suite
+Full integration test suite of 63 automated tests validating endpoints, non-fabrication contracts, and SHA-256 chain verification (reports/test_results.json).
+  [Rounded Rectangle 10]: Scope of Validation & Honest Boundaries
+• Development Scope Disclosures: The model is trained on a 10,000-sample labeled synthetic dataset; IP reputation uses deterministic simulation for demo (no commercial paid API keys configured); production deployment requires live network telemetry feeds and TLS reverse proxy.
+---
+SLIDE 11:
+  [Rounded Rectangle 1]: 09
+  [TextBox 2]: Risks, Challenges & Mitigation
+Identified technical challenges and operational countermeasures
+  [TextBox 4]: AI-BASED ZERO TRUST ARCHITECTURE  •  MAJOR PROJECT REVIEW
+  [TextBox 5]: 11
+  [Rounded Rectangle 6]: Adversarial Telemetry Manipulation
+• Attackers manipulating request headers or signals to lower risk scores.: Mitigation: Enforce strict server-side feature clipping, domain normalization, and fail-closed hard rule overrides for blacklists.
+  [Rounded Rectangle 7]: Biometric Spoofing (Photos & Screen Replay)
+• Presenting 2D printed photographs or screens to bypass face auth.: Mitigation: Implement real-time Haar-cascade eye-blink cadence, lighting variance, micro-movement liveness verification, and fallback to Email OTP.
+  [Rounded Rectangle 8]: Machine Learning Inference Latency
+• Complex multi-model evaluation creating perceptible API response delay.: Mitigation: Deploy depth-capped Random Forest (bounded artifact size) loaded in-memory via Joblib, achieving ~249ms full policy decisions.
+  [Rounded Rectangle 9]: Browser Privacy Masking & VPNs
+• Privacy extensions masking canvas and device hardware specs.: Mitigation: Missing signals flagged honestly as unavailable/warning, elevating risk score and triggering step-up multi-factor authentication.
+---
+SLIDE 12:
+  [Rounded Rectangle 1]: 10
+  [TextBox 2]: Applications, Future Scope & Conclusion
+Significance, deployment scope, and strategic roadmap
+  [TextBox 4]: AI-BASED ZERO TRUST ARCHITECTURE  •  MAJOR PROJECT REVIEW
+  [TextBox 5]: 12
+  [Rounded Rectangle 6]: Where It Can Help
+• Remote Workforce: Replaces perimeter VPNs with continuous, context-aware verification for remote and hybrid employees.
+• Financial Portals: Protects high-value banking and wire transfers from credential stuffing and automated bot attacks.
+• Healthcare EHR: Guarantees HIPAA compliance by isolating sensitive patient records inside cryptographic enclaves.
+• Defense & Cloud: Enforces strict Level-4 Security Officer vs Level-2 Operator clearance boundaries.
+  [Rounded Rectangle 7]: Future Scope
+• Hardware Keys: Integrate FIDO2 / WebAuthn physical security keys (YubiKey) for tamper-proof hardware authentication.
+• Reinforcement Learning: Deploy Contextual Bandits to dynamically adapt policy risk thresholds per organizational appetite.
+• OS Kernel Probes: Deploy lightweight Linux eBPF probes for kernel-level socket connection and process monitoring.
+• Live Threat Intel: Connect commercial threat feeds (AbuseIPDB, MaxMind GeoIP2) to replace demo simulated reputation checks.
+  [Rounded Rectangle 8]: Conclusion
+• Architecture Validated: Successfully implemented an authentic AI-driven Zero Trust platform following NIST SP 800-207 guidelines.
+• Dual AI Performance: Random Forest achieves R² = 0.9849, complemented by Isolation Forest anomaly outlier detection.
+• Comprehensive Defense: Combines 16 verification controls, dynamic policy engine, live Email OTP, and forward SHA-256 audit chaining.
+• Core Takeaway: Proves that continuous AI contextual evaluation fundamentally neutralizes credential-based cyberattacks.
+---
+SLIDE 13:
+  [Rounded Rectangle 1]: 11
+  [TextBox 2]: Link to Relevant SDGs
+Alignment with UN Sustainable Development Goals for digital resilience and governance
+  [TextBox 4]: AI-BASED ZERO TRUST ARCHITECTURE  •  MAJOR PROJECT REVIEW
+  [TextBox 5]: 13
+  [Rounded Rectangle 6]: 9
+Industry, Innovation & Infrastructure
+Target Alignment: Target 9.1 & Target 9.c: Develop resilient infrastructure and increase ICT access.
+Digital Infrastructure: Modern industrial and financial operations are digital. Weak perimeter defenses jeopardize cloud networks and power grids.
+Project Contribution: By deploying continuous Zero Trust security, this platform delivers robust digital resilience against ransomware and APTs.
+  [Rounded Rectangle 7]: 16
+Peace, Justice & Strong Institutions
+Target Alignment: Target 16.6: Develop effective, accountable and transparent institutions at all levels.
+Institutional Integrity: Public agencies, healthcare bodies, and governance portals face rising insider threats and illicit record tampering.
+Project Contribution: Our SHA-256 forward-chained immutable audit logging mathematically guarantees non-repudiation and prevents log tampering.
+  [Rounded Rectangle 8]: 12
+Responsible Consumption & Production
+Target Alignment: Target 12.5: Substantially reduce waste generation through prevention, reduction, and reuse.
+Resource Efficiency: Replaces expensive, energy-consuming proprietary hardware security appliances with efficient software microservices.
+Project Contribution: Lightweight Python/Flask and tree-ensemble architecture delivers sub-second inference with minimal compute energy consumption.
+---
+SLIDE 14:
+  [Rounded Rectangle 1]: 13
+  [TextBox 2]: References
+Authoritative IEEE standards and publications in Zero Trust and Artificial Intelligence
+  [TextBox 4]: AI-BASED ZERO TRUST ARCHITECTURE  •  MAJOR PROJECT REVIEW
+  [TextBox 5]: 13
+  [TextBox 6]: 1. S. Rose, O. Borchert, S. Mitchell, and S. Connelly, “Zero Trust Architecture,” National Institute of Standards and Technology (NIST), Gaithersburg, MD, NIST Special Publication 800-207, Aug. 2020. DOI: 10.6028/NIST.SP.800-207.
+2. R. Ward and B. Beyer, “BeyondCorp: A New Approach to Enterprise Security,” ;login: The USENIX Magazine, vol. 39, no. 6, pp. 6–11, Dec. 2014.
+3. M. A. Al-Daeef, N. Basir, and M. T. Saudi, “Risk-Based Continuous Authentication Using Machine Learning in Zero Trust Environments,” IEEE Access, vol. 10, pp. 112450–112465, 2022. DOI: 10.1109/ACCESS.2022.3216843.
+4. D. Temoshok et al., “Digital Identity Guidelines: Authentication and Lifecycle Management,” National Institute of Standards and Technology (NIST), NIST Special Publication 800-63B, Feb. 2025.
+5. L. Breiman, “Random Forests,” Machine Learning, vol. 45, no. 1, pp. 5–32, Oct. 2001. DOI: 10.1023/A:1010933404324.
+6. F. T. Liu, K. M. Ting, and Z.-H. Zhou, “Isolation Forest,” in Proc. Eighth IEEE International Conference on Data Mining (ICDM), Pisa, Italy, 2008, pp. 413–422. DOI: 10.1109/ICDM.2008.17.
+7. OWASP Foundation, “OWASP Top 10: 2025 - The Ten Most Critical Web Application Security Risks,” Open Web Application Security Project, Jan. 2025. [Online]. Available: https://owasp.org/Top10/.
+---
+SLIDE 15:
+  [Rounded Rectangle 1]: ZT
+  [TextBox 2]: Thank You
+
+AI-Based Zero Trust Architecture  •  Never Trust, Always Verify.
+
+Questions & Discussion
+  [TextBox 3]: ANUSHA H G : 1EW23IC006       •       CHARAN M S : 1EW23IC012
+
+NITHIN GOWDA R : 1EW23IC031       •       PUNARVA D N : 1EW23IC037
